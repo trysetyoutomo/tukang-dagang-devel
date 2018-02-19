@@ -5857,27 +5857,39 @@ $$('#form-register').on('form:success', function (e) {
 
 
     var s = window.localStorage.getItem("sisa");
+
+    // alert(window.localStorage.getItem("level"));
+
     if (window.localStorage.getItem("level")==2){ //jika penjual
-
-      if (window.localStorage.getItem("ukm_id")!=null || window.localStorage.getItem("ukm_id")!="" )//jika penjual
-     // 
+         // alert("masuk");
+        // alert(isNaN(window.localStorage.getItem("ukm_id")));
+      // if (window.localStorage.getItem("ukm_id")!=null || window.localStorage.getItem("ukm_id")!=""    )//jika penjual
+    if (!isNaN(window.localStorage.getItem("ukm_id")) )
+     {
+        // alert(window.localStorage.getItem("ukm_id"));
+         
         // $$(".bg-green").css("background-color","blue");
-        $$(".btn-tambah-penjual").css("display","flex");
+            $$(".btn-tambah-penjual").css("display","flex");
 
-        $$(".float-button-cepat").show(); // add float button
-      
-        $$(".panel-right .btn-add-umkm").hide();
-        $$("#li_button_fav_saya").show();
-        $$(".btn-dashboard-admin").hide();
-        $$("#row_User_pemilik").show();
-        $$("#User_masaaktif").show();
-        $$("#li_button_ukmku").show();
-        $$("#li_User_masaaktif").show();
-        $$("#li_button_permintaan").hide();
-        $$("#li_button_rekomendasi").hide();
-        $$("#box-poin").show();
-        $$(".btn-data-umkm").hide();
-        $$("#li_button_kat_fav").show();
+            $$(".float-button-cepat").show(); // add float button
+          
+            $$(".panel-right .btn-add-umkm").hide();
+            $$("#li_button_fav_saya").show();
+            $$(".btn-dashboard-admin").hide();
+            $$("#row_User_pemilik").show();
+            $$("#User_masaaktif").show();
+            $$("#li_button_ukmku").show();
+            $$("#li_User_masaaktif").show();
+            $$("#li_button_permintaan").hide();
+            $$("#li_button_rekomendasi").hide();
+            $$("#box-poin").show();
+            $$(".btn-data-umkm").hide();
+            $$("#li_button_kat_fav").show();
+
+        }else{
+            $$(".float-button-cepat").hide(); // add float button
+
+        }
 
 
         // alert(s);
