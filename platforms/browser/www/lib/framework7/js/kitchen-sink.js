@@ -2194,7 +2194,38 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
 });
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
-    alert(JSON.stringify(order));
+      if (order.length>0){
+          $$.each(order,function(i,v){
+
+               if (imageExists(server+"/images/product/"+v.id+".jpg")){
+                img = server+"/images/product/"+v.id+".jpg";
+               }else{
+                img = "img/no_image.jpg";
+               }
+             string = '<li class="hold-hapus-produk-"  data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
+                '<a href="#" class="item-link item-content">'+
+                '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                '<div class="item-inner">'+
+                '<div class="item-title-row" style="background-image:url()">'+
+                '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
+                '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
+                '</div>'+
+                 '<div class="item-text" style="width:100px">'+
+                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
+                '<input item_id="'+v.item_id+'" ukm_id="'+v.ukm_id+'" class="order-qty"  type="text" value="'+v.qty+'" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
+                '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
+                 '</div>'+
+
+                '</div>'+
+
+                '</div>'+
+                '</a>'+
+                '</li>';
+                $$("#cart-beli-cekout").append(string);
+
+          });
+      }
+    // alert(JSON.stringify(order));
     // $$("#cart-beli-cekout").html();
     // GetProdukByUMKM(id);
 });
