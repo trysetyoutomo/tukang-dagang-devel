@@ -2132,16 +2132,18 @@ function GetProdukByUMKM(id){
                }else{
                 img = "img/no_image.jpg";
                }
-               string = '<li class="hold-hapus-produk" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
+               string = '<li class="hold-hapus-produk-" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
                 '<div class="item-inner">'+
                 '<div class="item-title-row" style="background-image:url()">'+
-                '<div class="item-title"> '+v.nama+'</div>'+
-                '<div class="item-after"> Rp.'+numberWithCommas(v.harga)+'</div>'+
+                '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
+                '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
                 '</div>'+
                 '<div class="item-text" style="width:100px">'+
-                '<i style="float:none" class="fa fa-plus-square fa-2x"></i><input  type="text" value="0" style="width:40px;border:1px solid black;padding:5px;float:none" /><i class="fa fa-minus-square fa-2x " style="float:none"></i>'
+                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
+                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="text" value="0" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
+                '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
                  '</div>'+
 
                 '</div>'+
@@ -2160,7 +2162,62 @@ function GetProdukByUMKM(id){
     });
 }
 
- // $$(document).on('click',function(){
+$$(document).on("click",".btn-check-out",function(e){
+    var order = [];
+    $$(".order-qty").each(function(e){
+        var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").html();
+        var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-after").attr("angka");
+
+        order.push(
+            {
+                "ukm_id":$$(this).attr("ukm_id"),
+                "item_id":$$(this).attr("item_id"), 
+                "qty":$$(this).val(), 
+                "nama":nama, 
+                "harga":harga 
+            }
+        );
+
+    });
+    mainView.router.load({
+        url:"cekout.html",
+        query:{
+          order : order
+      }
+    });
+    // alert(JSON.stringify(order));
+    // $$.each(function())
+});
+$$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
+    var id =e.detail.page.query.id;
+    GetProdukByUMKM(id);
+});
+$$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
+    var order =e.detail.page.query.order;
+    alert(JSON.stringify(order));
+    // $$("#cart-beli-cekout").html();
+    // GetProdukByUMKM(id);
+});
+
+
+$$(document).on("click",".btn-add-qty",function(e){
+    // alert(nama);
+    // alert(harga);
+    // alert(nama);
+    var index = $(".btn-add-qty").index(this);
+    var jml = parseInt($('.order-qty').eq(index).val()) +1;
+    $('.order-qty').eq(index).val(jml);
+
+});
+$$(document).on("click",".btn-min-qty",function(e){
+    var index = $(".btn-min-qty").index(this);
+    // if (parseInt($('.order-qty').eq(index).val())>0){    
+        var jml = parseInt($('.order-qty').eq(index).val()) -1;
+        $('.order-qty').eq(index).val(jml);
+    // }    
+
+
+});
 $$(document).on("click",".btn-add-cart",function(e){
     // alert("123");
     var id = $(this).attr("ukm_id");
