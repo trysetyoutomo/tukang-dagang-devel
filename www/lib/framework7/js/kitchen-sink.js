@@ -2098,6 +2098,82 @@ function imageExists(image_url){
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+function GetProdukByUMKM(id){
+     $$.ajax({
+        url : server+"/index.php?r=Produk/GetProdukByUMKM",
+        data : "id="+id,
+        beforesend:function(bf){
+          myApp.showIndicator();
+        },
+        success : function(r){
+            var produk = JSON.parse(r);
+             $$("#cart-beli").html(" ");
+            if (produk.length>0){
+
+              $$.each(produk,function(i,v){
+                // alert(JSON.stringify(v));
+                var ke = "" ;
+                var img = "" ;
+                if (v.keterangan==""){
+                  ke = "Tidak ada keterangan";
+                }else{
+                  ke = v.keterangan;
+                }
+                var tersedia = "";
+                if (v.tersedia=="1"){
+                  tersedia = "<b style='color:green'>Tersedia</b>";
+                }else{
+                  tersedia = "<b style='color:red'>Tidak Tersedia</b>";
+                }
+
+               if (imageExists(server+"/images/product/"+v.id+".jpg")){
+                img = server+"/images/product/"+v.id+".jpg";
+               }else{
+                img = "img/no_image.jpg";
+               }
+               string = '<li class="hold-hapus-produk" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
+                '<a href="#" class="item-link item-content">'+
+                '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                '<div class="item-inner">'+
+                '<div class="item-title-row" style="background-image:url()">'+
+                '<div class="item-title"> '+v.nama+'</div>'+
+                '<div class="item-after"> Rp.'+numberWithCommas(v.harga)+'</div>'+
+                '</div>'+
+                '<div class="item-text" style="width:100px">'+
+                '<i style="float:none" class="fa fa-plus-square fa-2x"></i><input  type="text" value="0" style="width:40px;border:1px solid black;padding:5px;float:none" /><i class="fa fa-minus-square fa-2x " style="float:none"></i>'
+                 '</div>'+
+
+                '</div>'+
+                '</a>'+
+                '</li>';
+                $$("#cart-beli").append(string);
+                // alert(string);
+              });
+
+          }else{
+              $$("#cart-beli").append("<p> Data TIdak Ditemukan </p>");
+
+          }
+            
+        }
+    });
+}
+
+ // $$(document).on('click',function(){
+$$(document).on("click",".btn-add-cart",function(e){
+    // alert("123");
+    var id = $(this).attr("ukm_id");
+    mainView.router.load({
+        url:"tambah-cart.html",
+        query:{
+          id: id
+      }
+    });
+
+    myApp.closePanel();
+ });
+
 function cariById(id){
  
   var id_ukm = id;
@@ -2162,10 +2238,12 @@ function cariById(id){
             }
             // $$(".UMKM_kirim_pesanan").html(""12);
 
+            $$(".btn-add-cart").attr("ukm_id",id);
+
             $$(".UMKM_tel").attr("href","tel:"+data.telepon);
             $$(".UMKM_wa").attr("href","https://api.whatsapp.com/send?phone=62"+data.telepon.substring(1,100));
             $$(".UMKM_bbm").attr("href","http://pin.bbm.com/"+data.telepon.substring(1,100));
-            $$(".UMKM_sms").attr("href","sms:62"+data.telepon.substring(1,100)+"?body= Tukang Dagang 2017 \n");
+            $$(".UMKM_sms").attr("href","sms:62"+data.telepon.substring(1,100)+"?body= Tukang Dagang 2018 \n");
             // alert(data.gambar);
             $$("#background-umkm").css("background-image","url('"+server+"/images/bast/"+data.gambar+"'");
 
@@ -2312,8 +2390,10 @@ function cariById(id){
                 '<div class="item-title"> '+v.nama+'</div>'+
                 '<div class="item-after"> Rp.'+numberWithCommas(v.harga)+'</div>'+
                 '</div>'+
-                '<div class="item-text ">'+ke+'<br>'+tersedia+'</div>'+
-                '</div></a>'+
+                '<div class="item-text ">'+ke+'<br>'+tersedia+
+                 '</div>'+
+                '</div>'+
+                '</a>'+
                 '</li>';
                 $$("#list-produk").append(string);
                 // alert(string);
@@ -3178,15 +3258,6 @@ $$(document).on('page:init', '.page[data-page="rincian-umkm"]', function (e) {
   cariById(e.detail.page.query.id);
   myApp.closePanel("right");
   cekLevel();
-  // full refresh
-  // var ptrContent = $$('.pull-to-refresh-content');
-  // ptrContent.on('ptr:refresh', function (e) {
-  //   cariById($$("#Ukm_id").val());
-  //   myApp.pullToRefreshDone();
-    // window.location.reload();
-    // alert("masuk");
-  // });
-
 
   $$('#background-umkm').on('click', function () {
       myPhotoBrowserStandalone.open();
@@ -3430,7 +3501,7 @@ getNewsSticker();
               }
               else{
                  myApp.addNotification({
-                  message: "Tidak ditemukan Tukang Dagang ",
+                  message: "Tukang Dagang Tidak ditemukan  ",
                   button: {
                         text: 'Tutup',
                         // color: 'lightgreen'
@@ -3582,6 +3653,13 @@ function getAllPengajuan(){
 $$(document).on('page:init', '.page[data-page="request-list"]', function (e) {
     getAllPengajuan();
 });
+$$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
+    // data_ukm_id
+    var id =e.detail.page.query.id;
+    GetProdukByUMKM(id);
+
+});
+
 
   function getListPanggilan(){
      $$("#ul-panggilan-list").html("");
@@ -3786,7 +3864,6 @@ $$(document).on('page:init', '.page[data-page="request-list"]', function (e) {
   
 
   });
-
 
 
  $$('#li_button_permintaan').on('click', function () {
@@ -4031,7 +4108,7 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
           }
           else{
             myApp.addNotification({
-              message: "Tidak Menemukan Tukang Dagang Sesuai Form Pencarian  ",
+              message: "Tidak Menemukan Tukang Dagang yang sesuai dengan Kata Kunci   ",
               button: {
                     text: 'Tutup',
                     // color: 'lightgreen'
@@ -5961,7 +6038,12 @@ $$('#form-register').on('form:success', function (e) {
    
 
     if (l==2){
-      $$("#User_akses").html(" Penjual / Pengguna Umum");
+        if (isNaN(window.localStorage.getItem("ukm_id"))){
+          $$("#User_akses").html(" Pengguna ");
+        }else{
+          $$("#User_akses").html("  Penjual ");
+        }
+
     }else if (l==1){
       $$("#User_akses").html(" Admin ");
     }else if (l==3){
@@ -6043,7 +6125,7 @@ $$('#form-register').on('form:success', function (e) {
 
     }else{
        myApp.addNotification({
-          message: "Akun ini belum memiliki Tukang Dagang",
+          message: "Akun ini belum memiliki Usaha",
           buttonkey:  {
               text: 'Tutup',
           },
