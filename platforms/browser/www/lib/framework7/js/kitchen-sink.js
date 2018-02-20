@@ -2192,6 +2192,8 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
             "ukm_id":ukm_id,
             "pesan":$$("#pesan-order").val(),
             "alamat":$$(".alamat-kirim").html(),
+            "lat":$$("#val-lat").val(),
+            "lng":$$("#val-lon").val(),
             "produk":final_order
         }
     );
@@ -3929,6 +3931,7 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
        var data = JSON.parse(r);
        calon_pembeli_pos = [];
         calon_pembeli_pos = data;
+        // alert(calon_pembeli_pos);
          $$.each(calon_pembeli_pos,function(i,data){
           // alert(data);
           var pesan;
@@ -5092,6 +5095,7 @@ $$(document).on('click', '.btn-get-calon', function(e){
           anchor: new google.maps.Point(0, 0) // anchor
       };
       clearMarkersCalon();
+      alert(JSON.stringify(calon_pembeli_pos));
   if (calon_pembeli_pos.length>0){
       var arr_cal = [];  
 
@@ -5165,18 +5169,18 @@ $$(document).on('click', '.btn-get-calon', function(e){
      });// end for
 
       // jika ada yang belum d datangi maka 
-      if(arr_cal.indexOf("1")!= -1){ // value exist
-        // alert("123");
-      }else{
-          myApp.addNotification({
-              message: "Tidak Terdapat Calon Pelanggan",
-              buttonkey:  {
-                  text: 'Tutup',
-              },
-              hold : 5000
-          });
+      // if(arr_cal.indexOf("1")!= -1){ // value exist
+      //   // alert("123");
+      // }else{
+      //     myApp.addNotification({
+      //         message: "Tidak Terdapat Calon Pelanggan",
+      //         buttonkey:  {
+      //             text: 'Tutup',
+      //         },
+      //         hold : 5000
+      //     });
 
-      }                 
+      // }                 
       clearMarkersTetap();
       // clearMarkersTetap();
       mainView.router.back();
