@@ -2096,6 +2096,7 @@ function imageExists(image_url){
 
 }
 function numberWithCommas(x) {
+  // console.log(x);
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -2132,6 +2133,7 @@ function GetProdukByUMKM(id){
                }else{
                 img = "img/no_image.jpg";
                }
+
                string = '<li class="hold-hapus-produk-" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
@@ -2237,6 +2239,7 @@ function cariById(id){
   // alert(id_ukm);
   loader_refresh = true;
   // alert(id);
+  console.log(server);
   // myApp.alert('Akses Detail');
    // var id = $$(this).attr("ukm-id");
    $$.ajax({
@@ -2291,7 +2294,8 @@ function cariById(id){
             if (data.delivery=="0"){   
                 $$(".UMKM_kirim_pesanan").html("Tidak");
             }else{
-                $$(".UMKM_kirim_pesanan").html("Ya, Minimal Pembelian RP. "+numberWithCommas(data.minimal) );
+              // console.log(data);
+                // $$(".UMKM_kirim_pesanan").html("Ya, Minimal Pembelian RP. "+numberWithCommas(data.minimal) );
             }
             // $$(".UMKM_kirim_pesanan").html(""12);
 
@@ -2439,6 +2443,7 @@ function cariById(id){
                }else{
                 img = "img/no_image.jpg";
                }
+               console
                string = '<li class="hold-hapus-produk" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
@@ -6972,11 +6977,42 @@ $$(document).on('ajaxStart', function (e) {
    
 });
 $$(document).on('ajaxComplete', function (e) {
-       myApp.hideIndicator();
-    if (e.detail.xhr.requestUrl.indexOf('autocomplete-languages.json') >= 0) {
-        // Don't show preloader for autocomplete demo requests
-        return;
+  myApp.hideIndicator();
+  if (e.detail.xhr.requestUrl.indexOf('autocomplete-languages.json') >= 0) {
+    // Don't show preloader for autocomplete demo requests
+    return;
+  }
+});
+
+$$('.open-password').on('click', function () {
+  // var password = 'test';
+  // myApp.modalLogin('Enter your email', function (password) {
+  //   // app.dialog.alert('Thank you!<br>Password:' + password);
+  // });
+  // console.log(myApp);
+  myApp.prompt( 'Masukan Email Anda', [ 'Lupa Password'],
+    function (value) {
+      if (value == '') {
+        myApp.alert('Email harap diisi', ['Peringatan']);
+      } else {
+        $$.ajax({
+          url: server+'/index.php?r=User/forgot_passwprd',
+          method: 'GET',
+          data : {email: value},
+          // dataType: 'json',
+          success:function(data){
+            myApp.alert('Silahkan check email anda', ['']);
+          },
+          error:function(err){
+            console.log(err);
+          }
+        });
+      }
+    },
+    function(value) {
+      myApp.alert('silahkan check email anda', ['']);
     }
+  );
 });
 
 // Callbacks for specific pages when it initialized
