@@ -2242,11 +2242,15 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
 
 
 });
+function roundToTwo(num) {    
+    return +(Math.round(num + "e+2")  + "e-2");
+}
 $$(document).on("click",".btn-check-out",function(e){
     var order = [];
     var ttl = 0;
     var alamat = geocodePositionReturn(new google.maps.LatLng($$("#val-lat").val(), $$("#val-lon").val() ) );
-    // alert(alamat);
+    // alert(jarak);
+    // $$("#jarak-td").html(jarak);
     $$(".order-qty").each(function(e){
         var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".nama-item").html();
         var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".harga-item").attr("angka");
@@ -2295,6 +2299,8 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
 });
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
+  
+
 
     // function getTotalOrder(){
 
@@ -2330,6 +2336,15 @@ $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
                 $$("#cart-beli-cekout").append(string);
           });
           $$("#total-biaya").html(numberWithCommas(total_order) );
+            var jarak = roundToTwo(getDistance($$("#val-lat").val(),$$("#val-lon").val(),$$(".UMKM_lat").html(),$$(".UMKM_lon").html(),"K"));
+            if (jarak<1){
+                jarak = jarak*1000+" Meter";
+            }else{
+                jarak = jarak * 1 +"Kilo Meter"
+            }
+            $$(".order-jarak").html(jarak);
+            // alert(jarak);
+
 
       }
     // alert(JSON.stringify(order));
@@ -2357,7 +2372,10 @@ $$(document).on("click",".btn-min-qty",function(e){
 
 });
 $$(document).on("click",".btn-add-cart",function(e){
-    // alert("123");
+  if (window.localStorage.getItem("isLogged")!="1"){
+      myApp.loginScreen();
+     exit;
+  }
     var id = $(this).attr("ukm_id");
     mainView.router.load({
         url:"tambah-cart.html",
