@@ -45,11 +45,21 @@
             <div class="navbar bg-orange">
               <div class="navbar-inner">
                 <div class="center"> 
-                <i class="fa fa-list"></i>Tukang Dagang</div>
+                <i class="fa fa-list"></i> Tukang Dagang</div>
               </div>
             </div>
             <div class="page-content">
-              <div class="list-block" id="direction"></div>
+             <form class="searchbar searchbar-init searchbar-active" 
+                data-search-list=".request-list" data-search-in=".item-title" style="background-color: #4caf50" >
+
+                <div class="searchbar-input">
+                <input type="search" placeholder="Cari Tukang Dagang" class=""><a href="#" class="searchbar-clear"></a></div>
+              
+              </form>
+              <div class="list-block request-list searchbar-found media-list" style="margin-top: -25px;">
+                <div class="list-block" id="direction"></div>
+              </div>
+            
             </div>
           </div>
         </div>
@@ -65,7 +75,7 @@
               <div class="navbar-inner">
                 <div class="center" id=""> <i class="fa fa-user"></i> 
                 
-                Informasi Pengguna 
+                 Informasi Pengguna 
 
 
                 </div>

@@ -2229,8 +2229,9 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
                       // color: 'lightgreen'
                     }
               });
+              mainView.router.loadPage({url:'order.html', ignoreCache:true, reload:true })
               // mainView.router.back();
-              window.location.reload();
+              // window.location.reload();
           
              // myApp.closePanel();
           }
@@ -2243,11 +2244,15 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
 });
 $$(document).on("click",".btn-check-out",function(e){
     var order = [];
+    var ttl = 0;
+    var alamat = geocodePositionReturn(new google.maps.LatLng($$("#val-lat").val(), $$("#val-lon").val() ) );
+    // alert(alamat);
     $$(".order-qty").each(function(e){
         var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".nama-item").html();
         var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".harga-item").attr("angka");
         
         if (parseInt($$(this).val())>0){
+            ttl++;
             order.push(
                 {
                     "ukm_id":$$(this).attr("ukm_id"),
@@ -2258,18 +2263,29 @@ $$(document).on("click",".btn-check-out",function(e){
                 }
             );
         }else{
-            // alert("ga masuk");
+          
         }
 
 
     });
     // alert(JSON.stringify(order));
-    mainView.router.load({
-        url:"cekout.html",
-        query:{
-          order : order
-      }
-    });
+    if ( ttl>0 ){
+        mainView.router.load({
+            url:"cekout.html",
+            query:{
+              order : order
+          }
+        });
+    }else{
+           myApp.addNotification({
+                  message: "Anda belum memilih Jasa/Produk",
+                  buttonkey:  {
+                      text: 'Tutup',
+                      // color: 'lightgreen'
+                    }
+              });
+          
+    }
     // alert(JSON.stringify(order));
     // $$.each(function())
 });
@@ -3248,6 +3264,9 @@ function geocodePositionReturn(pos)
         {
             if (status == google.maps.GeocoderStatus.OK) 
             {
+            $(".alamat-kirim").html(results[0].formatted_address);
+
+                // alert(results[0].formatted_address);
               // alert(results[0].address_components[1].short_name);
               return results[0].formatted_address;
             } 
@@ -3871,16 +3890,18 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
     getListOrder(window.localStorage.getItem("username"));
 });
 
-   function getListOrder(username){
+function getListOrder(username){
      $$("#order-pending").html("");
     $$.ajax({
       url : server+"/index.php?r=UkmPanggil/getListOrder",
       data : "username="+username,
       success : function(r){
        var data = JSON.parse(r);
+        $$("#order-proses").html("");
         $$("#order-batal").html("");
         $$("#order-selesai").html("");
         $$("#order-pending").html("");
+        var style="";
          $$.each(data,function(i,data){
           // alert(data);
           // var pesan;
@@ -3891,11 +3912,29 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
           // }
 
           // var status_sampai;
-          // if (data.is_sampai==1){
-          //   status_sampai = "<span style='color:green'>Telah Didatangi</span>";
-          // }else{
-          //   status_sampai = "<span style='color:red'>Belum Didatangi</span>"
-          // }
+          if (data.status=="2"){
+            if (window.localStorage.getItem("username")==data.cancel_by)
+                s = "Di Batalkan Olehku ";
+            else
+                s = "Di Batalkan Tukang Dagang ";
+          }else{
+            s = " ";
+          }
+
+           var idString = "";
+          if (data.status=="0"){
+            idString = "#order-pending";
+            style = "style='display:flex'";
+          }else if (data.status=="1"){
+            idString = "#order-selesai";
+            style = "style='display:flex'";
+          }else if (data.status=="2"){
+            idString = "#order-batal";
+            style = "style='display:none'";
+          }else if (data.status=="3"){
+            idString = "#order-proses";
+            style = "style='display:none'";
+          }
 
           var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
@@ -3903,22 +3942,22 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
           '<div class="item-inner">'+
           '<div class="item-title-row">'+
           '<div class="item-title">'+data.nama+'</div>'+
-          '<div class="item-after">'+data.jam+' </div>'+
+          '<div class="item-after">'+moment(data.jam, "YYYY-MM-DD h:mm:ss").fromNow()+' </div>'+
           '</div>'+
           '<div class="item-subtitle">'+data.alamat+'</div>'+
-          // '<div class="item-text">Lokasi</div>'+
+          '<div class="item-text" style="color:red">'+s+'</div>'+
           '</div>'+
           '</a>'+
           '</div>'+
-          '<div class="swipeout-actions-right ">'+
+          '<div class="swipeout-actions-right " '+style+'>'+
           // '<a ukm-id="'+data.id+'"   class="pending-acc demo-mark bg-green  " style="left: 0px;"><i class="fa fa-check" ></i></a>'+
           // '<a ukm-id="'+data.id+'"   class="pending-reject demo-mark bg-red  " style="left: 0px;"><i class="fa fa-times" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="pending-info demo-mark bg-orange  " style="left: 0px;"><i class="fa fa-info" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="external demo-mark bg-blue  " style="left: 0px;"><i class="fa fa-marker" ></i></a>'+
-           '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
-              '<i class="material-icons  md-30">directions</i>'+
-              '</a>'+
-              '<a class="bg-green external btn-delete-calon" panggil_id="'+data.id+'"  >'+
+           // '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
+           //    '<i class="material-icons  md-30">directions</i>'+
+           //    '</a>'+
+              '<a class="bg-red external btn-delete-calon" panggil_id="'+data.id+'"  >'+
               '<i class="fa fa-times external"></i>'+
               '</a>'+
               '<a class="bg-orange red" href="tel:'+data.username+'" >'+
@@ -3935,14 +3974,7 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
 
           '</div>'+
           '</li>';
-          var idString = "";
-          if (data.status=="0"){
-            idString = "#order-pending";
-          }else if (data.status=="1"){
-            idString = "#order-selesai";
-          }else if (data.status=="2"){
-            idString = "#order-batal";
-          }
+        
           $$(idString).append(html);
         
         });
@@ -3971,22 +4003,34 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
           }
 
           var status_sampai;
-          if (data.is_sampai==1){
-            status_sampai = "<span style='color:green'>Telah Didatangi</span>";
-          }else{
-            status_sampai = "<span style='color:red'>Belum Didatangi</span>"
+          var style;
+          if (data.status==0){
+            status_sampai = "<span style='color:red'>Tertunda</span>";
+            style="style='display:flex'";
+            style_done="style='display:none'";
+          }else if (data.status==1){
+            status_sampai = "<span style='color:green'>Selesai</span>";
+          }else if (data.status==2){
+            status_sampai = "<span style='color:black'>Batal</span>";
+          }else if (data.status==3){
+            status_sampai = "<span style='color:black'>Proses</span>";
+            style="style='display:none'";
+            style_done="style='display:flex'";
           }
+
+
+
 
           var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
           '<div class="item-title-row">'+
-          '<div class="item-title">'+data.username+' - '+status_sampai+'</div>'+
-          '<div class="item-after">'+data.jam+' </div>'+
+          '<div class="item-title">'+data.username+' </div>'+
+          '<div class="item-after">'+moment(data.jam, "YYYY-MM-DD h:mm:ss").fromNow()+' </div>'+
           '</div>'+
           '<div class="item-subtitle">'+data.pesan+'</div>'+
-          // '<div class="item-text">Lokasi</div>'+
+          '<div class="item-text">'+status_sampai+'</div>'+
           '</div>'+
           '</a>'+
           '</div>'+
@@ -3995,11 +4039,17 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
           // '<a ukm-id="'+data.id+'"   class="pending-reject demo-mark bg-red  " style="left: 0px;"><i class="fa fa-times" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="pending-info demo-mark bg-orange  " style="left: 0px;"><i class="fa fa-info" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="external demo-mark bg-blue  " style="left: 0px;"><i class="fa fa-marker" ></i></a>'+
-           '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
-              '<i class="material-icons  md-30">directions</i>'+
-              '</a>'+
-              '<a class="bg-green external btn-delete-calon" panggil_id="'+data.id+'"  >'+
+              // '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
+              // '<i class="material-icons  md-30">directions</i>'+
+              // '</a>'+
+              '<a class="bg-red external btn-delete-calon" '+style+' panggil_id="'+data.id+'"  >'+
               '<i class="fa fa-times external"></i>'+
+              '</a>'+
+                '<a class="bg-green external btn-approve-calon" '+style+' panggil_id="'+data.id+'"  >'+
+              '<i class="fa fa-check external"></i>'+
+              '</a>'+
+                  '<a class="bg-green external btn-selesai-calon" '+style_done+' panggil_id="'+data.id+'"  >'+
+              '<i class="fa fa-flag-checkered external"></i>'+
               '</a>'+
               '<a class="bg-orange red" href="tel:'+data.username+'" >'+
               '<i class="fa fa-phone external"></i>'+
@@ -4009,7 +4059,7 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
               '</a>'+
               '<a class="bg-green external" href="https://api.whatsapp.com/send?phone=62"+data.telepon.substring(1,100));"">'+
               '<i class="fa fa-whatsapp"></i>'+
-            '</a>'+
+                '</a>'+
 
           // '<a href="http://maps.google.com/maps?saddr='+$$("#val-lat").val()+','+$$("#val-lon").val()+'&daddr='+data.lat+','+data.lon+'" lat="'+data.lat+'" class="link external bg-blue"  lon="'+data.lon+'" class="" style="left: 0px;"><i class="material-icons  md-24 ">directions</i> <i class="fa fa-google"></i></a>'+
 
@@ -4050,10 +4100,10 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
      var id = $$(this).attr("panggil_id");
      var ini = $$(this);
 
-      myApp.confirm('Yakin ?',"Konfirmasi", function () {
+      myApp.confirm('Yakin ?',"Yakin Menolak/Membatalkan Pesanan ?", function () {
          $$.ajax({
             url : server+"/index.php?r=Ukm/bersihkan",
-            data :"id="+id,
+            data :"id="+id+"&username="+window.localStorage.getItem("username"),
             success : function(r){
                 var data = JSON.parse(r);
                 if (data.success){
@@ -4068,6 +4118,56 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
       });
 
    });
+
+     $$(document).on("click",'.btn-approve-calon', function (e) {
+     e.preventDefault();
+     var id = $$(this).attr("panggil_id");
+     var ini = $$(this);
+
+      myApp.confirm('Yakin ?',"Yakin Menerima Pesanan ?", function () {
+         $$.ajax({
+            url : server+"/index.php?r=Ukm/ApproveCalon",
+            data :"id="+id+"&username="+window.localStorage.getItem("username"),
+            success : function(r){
+                var data = JSON.parse(r);
+                if (data.success){
+                    $$(".refresh-calon").trigger("click");
+                   // $$(".tr-calon[panggil_id='"+id+"']").remove();
+                }else{
+                  alert("Gagal");
+                }
+            },error: function(e){
+              alert(JSON.stringify(e));
+            }
+        });
+      });
+
+   });
+        $$(document).on("click",'.btn-selesai-calon', function (e) {
+     e.preventDefault();
+     var id = $$(this).attr("panggil_id");
+     var ini = $$(this);
+
+      myApp.confirm('Yakin ?',"Telah Menyelesaikan Pesanan ?", function () {
+         $$.ajax({
+            url : server+"/index.php?r=Ukm/SelesaiCalon",
+            data :"id="+id+"&username="+window.localStorage.getItem("username"),
+            success : function(r){
+                var data = JSON.parse(r);
+                if (data.success){
+                    $$(".refresh-calon").trigger("click");
+                   // $$(".tr-calon[panggil_id='"+id+"']").remove();
+                }else{
+                  alert("Gagal");
+                }
+            },error: function(e){
+              alert(JSON.stringify(e));
+            }
+        });
+      });
+
+   });
+
 
  
    $$(document).on("click",'.btn-delete-fav', function (e) {
@@ -5376,8 +5476,13 @@ function appendToList(result_marker){
       }  
 
       
+        if (v.tipe=="3"){
+            color_row = "style='background-color:cornsilk'";
+        }else{
+            color_row = "";
+        }
   
-        var data = '<li class="swipeout transitioning  >'+
+        var data = '<li class="swipeout transitioning" '+color_row+'  >'+
         '<div class="swipeout-content"  >'+
         '<a  class="item-link item-content buka-ukm"  href="tabs-swipeable.html?id='+v.id+'" >'+
         '<div class="item-inner">'+
@@ -6218,18 +6323,22 @@ $$('#form-register').on('form:success', function (e) {
 
 
     var lev = window.localStorage.getItem("ukm_tipe");
-     if (lev=="3" || lev=="2"){ //jika penjual kliling
+     
+     if (lev=="3" || lev=="2"  || lev=="1"  || lev=="4"  || lev=="5"){ //jika penjual kliling
         if (!isNaN(window.localStorage.getItem("ukm_id")) ){   
-         $$("#li_button_panggilan").show();
-         $$(".wrapper-tracking").show();
-         $$(".notification-panggilan").show();
+             $$("#li_button_panggilan").show();
+             $$(".wrapper-tracking").show();
+             $$(".notification-panggilan").show();
+            // alert(lev);
         }
+        // alert(window.localStorage.getItem("ukm_id"));
 
       }else{
-         $$(".notification-panggilan").hide();
+         // $$(".notification-panggilan").hide();
         $$("#li_button_panggilan").hide();
          $$(".wrapper-tracking").hide();
       }
+
 
 
     var s = window.localStorage.getItem("sisa");
