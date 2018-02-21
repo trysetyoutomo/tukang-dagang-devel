@@ -50,7 +50,7 @@
 #map .centerMarker {
     position: absolute;
     /* background: url(http://maps.gstatic.com/mapfiles/markers2/marker.png) no-repeat; */
-    background-image: url("img/marker.ico");
+    background-image: url("../img/marker.ico");
     background-size: 100% 100%;
     background-position: center center;
     top: 0px;

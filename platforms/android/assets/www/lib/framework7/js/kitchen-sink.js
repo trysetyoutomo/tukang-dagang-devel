@@ -2358,7 +2358,7 @@ function cariById(id){
   // alert(id_ukm);
   loader_refresh = true;
   // alert(id);
-  console.log(server);
+  // console.log(server);
   // myApp.alert('Akses Detail');
    // var id = $$(this).attr("ukm-id");
    $$.ajax({
@@ -2372,10 +2372,12 @@ function cariById(id){
             
             myApp.hideIndicator();
             if (window.localStorage.getItem("ukm_id")==id){
+              $$(".btn-add-cart").hide();
               $$(".btn-ganti-gambar").show();
               $$(".btn-tambah-penjual").css("display","flex");
              
             }else{
+              $$(".btn-add-cart").css("display","flex");
               $$(".btn-ganti-gambar").hide();
               $$(".btn-tambah-penjual").css("display","none");
              
@@ -3234,6 +3236,27 @@ myApp.alert('TIMEOUT',"Ups");
 
 });
 
+function geocodePositionReturn(pos) 
+  {
+   geocoder = new google.maps.Geocoder();
+   geocoder.geocode
+    ({
+        latLng: pos
+    }, 
+        function(results, status) 
+        {
+            if (status == google.maps.GeocoderStatus.OK) 
+            {
+              // alert(results[0].address_components[1].short_name);
+              return results[0].formatted_address;
+            } 
+            else 
+            {
+            return "Address Not Found By Google";
+            }
+        }
+    );
+}
 function geocodePosition(pos) 
   {
    geocoder = new google.maps.Geocoder();
@@ -6285,6 +6308,7 @@ $$('#form-register').on('form:success', function (e) {
        $$(".btn-tambah-penjual").hide();
         $$(".float-button-cepat").hide();
          $$(".btn-dashboard-admin").hide();
+         $$(".btn-list-order").hide();
      }
 
   }
