@@ -2096,7 +2096,6 @@ function imageExists(image_url){
 
 }
 function numberWithCommas(x) {
-  // console.log(x);
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -2133,20 +2132,19 @@ function GetProdukByUMKM(id){
                }else{
                 img = "img/no_image.jpg";
                }
-
                string = '<li class="hold-hapus-produk-" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
                 '<div class="item-inner">'+
-                    '<div class="item-title-row" style="background-image:url()">'+
-                          '<div class="item-title" style="width: 150px;"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
-                        // '<div class="item-after" > </div>'+
-                          '<div class="item-after" style="width:100px;float:right">'+
-                                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
-                                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="text" value="0" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
-                        '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
-                  '</div>'+
+                '<div class="item-title-row" style="background-image:url()">'+
+                '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
+                '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
                 '</div>'+
+                '<div class="item-text" style="width:100px">'+
+                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
+                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="text" value="0" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
+                '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
+                 '</div>'+
 
                 '</div>'+
                 '</a>'+
@@ -2164,105 +2162,23 @@ function GetProdukByUMKM(id){
     });
 }
 
-$$(document).on("click",".btn-panggil-pesan",function(e){
-    var final_order_head = [];
-    var final_order = [];
-    var ukm_id = 0;
-     $$(".order-qty-final").each(function(e){
-        var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".nama-item").html();
-        var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".harga-item").attr("angka");
-        
-        if (parseInt($$(this).val())>0){
-            ukm_id = $$(this).attr("ukm_id"); 
-            final_order.push(
-                {
-                    "ukm_id":$$(this).attr("ukm_id"),
-                    "item_id":$$(this).attr("item_id"), 
-                    "qty":$$(this).val(), 
-                    "nama":nama, 
-                    "harga":harga 
-                }
-            );
-        }else{
-            // alert("ga masuk"); 
-        }
-
-    });
-    final_order_head.push(
-        {
-            "username":window.localStorage.getItem("username"),
-            "ukm_id":ukm_id,
-            "pesan":$$("#pesan-order").val(),
-            "alamat":$$(".alamat-kirim").html(),
-            "lat":$$("#val-lat").val(),
-            "lng":$$("#val-lon").val(),
-            "produk":final_order
-        }
-    );
-
-    $$.ajax({
-        url : server+"/index.php?r=Ukm/PanggilPesanUkm",
-        data : final_order_head,
-        beforesend:function(bf){
-          myApp.showIndicator();
-        },
-        success : function(r){
-          var data = JSON.parse(r);
-          if (data.success==false){
-               $$.each(data.err,function(i,v){  
-                 myApp.addNotification({
-                      message: v,
-                      buttonkey:  {
-                          text: 'Tutup',
-                          // color: 'lightgreen'
-                        }
-                  });
-                });
-            // mainView.router.back();
-          }else{
-    
-             myApp.addNotification({
-                  message: "Pesan Berhasil Dikirim !",
-                  buttonkey:  {
-                      text: 'Tutup',
-                      // color: 'lightgreen'
-                    }
-              });
-              // mainView.router.back();
-              window.location.reload();
-          
-             // myApp.closePanel();
-          }
-            // alert(r);
-            // var produk = JSON.parse(r);
-        }
-    });
-
-
-});
 $$(document).on("click",".btn-check-out",function(e){
     var order = [];
     $$(".order-qty").each(function(e){
-        var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".nama-item").html();
-        var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").find(".harga-item").attr("angka");
-        
-        if (parseInt($$(this).val())>0){
-            order.push(
-                {
-                    "ukm_id":$$(this).attr("ukm_id"),
-                    "item_id":$$(this).attr("item_id"), 
-                    "qty":$$(this).val(), 
-                    "nama":nama, 
-                    "harga":harga 
-                }
-            );
-        }else{
-            // alert("ga masuk");
-        }
+        var nama = $$(this).closest(".item-inner").find(".item-title-row").find(".item-title").html();
+        var harga = $$(this).closest(".item-inner").find(".item-title-row").find(".item-after").attr("angka");
 
+        order.push(
+            {
+                "ukm_id":$$(this).attr("ukm_id"),
+                "item_id":$$(this).attr("item_id"), 
+                "qty":$$(this).val(), 
+                "nama":nama, 
+                "harga":harga 
+            }
+        );
 
     });
-    // alert(JSON.stringify(order));
     mainView.router.load({
         url:"cekout.html",
         query:{
@@ -2278,15 +2194,8 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
 });
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
-
-    // function getTotalOrder(){
-
-    // }
-
-    var total_order = 0;
       if (order.length>0){
           $$.each(order,function(i,v){
-            total_order+= parseInt(v.harga)*parseInt(v.qty);
 
                if (imageExists(server+"/images/product/"+v.id+".jpg")){
                 img = server+"/images/product/"+v.id+".jpg";
@@ -2294,26 +2203,27 @@ $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
                 img = "img/no_image.jpg";
                }
              string = '<li class="hold-hapus-produk-"  data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
-                    '<a href="#" class="item-link item-content">'+
-                    '<div class="item-media"><img src="'+img+'" width="80"></div>'+
-                    '<div class="item-inner">'+
-                    '<div class="item-title-row" style="background-image:url()">'+
-                    '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
-                    '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
-                    '</div>'+
-                     '<div class="item-text" style="width:80px">'+
-                    '<i style="float:none;display:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
-                    '<input readonly item_id="'+v.item_id+'" ukm_id="'+v.ukm_id+'" class="order-qty-final"  type="text" value="'+v.qty+'" style="width:40px;border:1px solid gray;padding:5px;display:inline-block;float:right" />'+
-                    '&nbsp;<i style="display:none" class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
-                     '</div>'+
-                    '</div>'+
-                    '</div>'+
-                    '</a>'+
+                '<a href="#" class="item-link item-content">'+
+                '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                '<div class="item-inner">'+
+                '<div class="item-title-row" style="background-image:url()">'+
+                '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
+                '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
+                '</div>'+
+                 '<div class="item-text" style="width:100px">'+
+                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
+                '<input item_id="'+v.item_id+'" ukm_id="'+v.ukm_id+'" class="order-qty"  type="text" value="'+v.qty+'" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
+                '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
+                 '</div>'+
+
+                '</div>'+
+
+                '</div>'+
+                '</a>'+
                 '</li>';
                 $$("#cart-beli-cekout").append(string);
-          });
-          $$("#total-biaya").html(numberWithCommas(total_order) );
 
+          });
       }
     // alert(JSON.stringify(order));
     // $$("#cart-beli-cekout").html();
@@ -2358,7 +2268,6 @@ function cariById(id){
   // alert(id_ukm);
   loader_refresh = true;
   // alert(id);
-  console.log(server);
   // myApp.alert('Akses Detail');
    // var id = $$(this).attr("ukm-id");
    $$.ajax({
@@ -2413,8 +2322,7 @@ function cariById(id){
             if (data.delivery=="0"){   
                 $$(".UMKM_kirim_pesanan").html("Tidak");
             }else{
-              // console.log(data);
-                // $$(".UMKM_kirim_pesanan").html("Ya, Minimal Pembelian RP. "+numberWithCommas(data.minimal) );
+                $$(".UMKM_kirim_pesanan").html("Ya, Minimal Pembelian RP. "+numberWithCommas(data.minimal) );
             }
             // $$(".UMKM_kirim_pesanan").html(""12);
 
@@ -2562,7 +2470,6 @@ function cariById(id){
                }else{
                 img = "img/no_image.jpg";
                }
-               console
                string = '<li class="hold-hapus-produk" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
@@ -3840,93 +3747,8 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
     GetProdukByUMKM(id);
 
 });
-$$(document).on('click', '.btn-refresh-order', function (e) {
-    getListOrder(window.localStorage.getItem("username"));
-});
-$$(document).on('page:init', '.page[data-page="order"]', function (e) {
-    getListOrder(window.localStorage.getItem("username"));
-});
 
-   function getListOrder(username){
-     $$("#order-pending").html("");
-    $$.ajax({
-      url : server+"/index.php?r=UkmPanggil/getListOrder",
-      data : "username="+username,
-      success : function(r){
-       var data = JSON.parse(r);
-        $$("#order-batal").html("");
-        $$("#order-selesai").html("");
-        $$("#order-pending").html("");
-         $$.each(data,function(i,data){
-          // alert(data);
-          // var pesan;
-          // if (data.pesan.length>0){
-          //   pesan = data.pesan;
-          // }else{
-          //   pesan = "Tidak ada pesan";
-          // }
 
-          // var status_sampai;
-          // if (data.is_sampai==1){
-          //   status_sampai = "<span style='color:green'>Telah Didatangi</span>";
-          // }else{
-          //   status_sampai = "<span style='color:red'>Belum Didatangi</span>"
-          // }
-
-          var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
-          '<div class="swipeout-content" style="">'+
-          '<a href="#" class="item-link item-content">'+
-          '<div class="item-inner">'+
-          '<div class="item-title-row">'+
-          '<div class="item-title">'+data.nama+'</div>'+
-          '<div class="item-after">'+data.jam+' </div>'+
-          '</div>'+
-          '<div class="item-subtitle">'+data.alamat+'</div>'+
-          // '<div class="item-text">Lokasi</div>'+
-          '</div>'+
-          '</a>'+
-          '</div>'+
-          '<div class="swipeout-actions-right ">'+
-          // '<a ukm-id="'+data.id+'"   class="pending-acc demo-mark bg-green  " style="left: 0px;"><i class="fa fa-check" ></i></a>'+
-          // '<a ukm-id="'+data.id+'"   class="pending-reject demo-mark bg-red  " style="left: 0px;"><i class="fa fa-times" ></i></a>'+
-          // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="pending-info demo-mark bg-orange  " style="left: 0px;"><i class="fa fa-info" ></i></a>'+
-          // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="external demo-mark bg-blue  " style="left: 0px;"><i class="fa fa-marker" ></i></a>'+
-           '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
-              '<i class="material-icons  md-30">directions</i>'+
-              '</a>'+
-              '<a class="bg-green external btn-delete-calon" panggil_id="'+data.id+'"  >'+
-              '<i class="fa fa-times external"></i>'+
-              '</a>'+
-              '<a class="bg-orange red" href="tel:'+data.username+'" >'+
-              '<i class="fa fa-phone external"></i>'+
-              '</a>'+
-              '<a class="bg-blue external" href="sms:'+data.username+'" >'+
-              '<i class="fa fa-envelope"></i>'+
-              '</a>'+
-              '<a class="bg-green external" href="https://api.whatsapp.com/send?phone=62"+data.telepon.substring(1,100));"">'+
-              '<i class="fa fa-whatsapp"></i>'+
-            '</a>'+
-
-          // '<a href="http://maps.google.com/maps?saddr='+$$("#val-lat").val()+','+$$("#val-lon").val()+'&daddr='+data.lat+','+data.lon+'" lat="'+data.lat+'" class="link external bg-blue"  lon="'+data.lon+'" class="" style="left: 0px;"><i class="material-icons  md-24 ">directions</i> <i class="fa fa-google"></i></a>'+
-
-          '</div>'+
-          '</li>';
-          var idString = "";
-          if (data.status=="0"){
-            idString = "#order-pending";
-          }else if (data.status=="1"){
-            idString = "#order-selesai";
-          }else if (data.status=="2"){
-            idString = "#order-batal";
-          }
-          $$(idString).append(html);
-        
-        });
-     
-
-      }
-    });
-  }
   function getListPanggilan(){
      $$("#ul-panggilan-list").html("");
     $$.ajax({
@@ -3936,7 +3758,6 @@ $$(document).on('page:init', '.page[data-page="order"]', function (e) {
        var data = JSON.parse(r);
        calon_pembeli_pos = [];
         calon_pembeli_pos = data;
-        // alert(calon_pembeli_pos);
          $$.each(calon_pembeli_pos,function(i,data){
           // alert(data);
           var pesan;
@@ -4201,8 +4022,6 @@ $$(document).on('click','.btn-user-out', function () {
                       window.localStorage.removeItem("level");
                       window.localStorage.removeItem("kategori_favorite");
                       window.localStorage.removeItem("td_favorite");
-                      window.localStorage.removeItem("delivery");
-                      window.localStorage.removeItem("minimal");
                       // window.localStorage.removeItem("");
 
                        cekLevel();
@@ -5100,7 +4919,6 @@ $$(document).on('click', '.btn-get-calon', function(e){
           anchor: new google.maps.Point(0, 0) // anchor
       };
       clearMarkersCalon();
-      alert(JSON.stringify(calon_pembeli_pos));
   if (calon_pembeli_pos.length>0){
       var arr_cal = [];  
 
@@ -5174,18 +4992,18 @@ $$(document).on('click', '.btn-get-calon', function(e){
      });// end for
 
       // jika ada yang belum d datangi maka 
-      // if(arr_cal.indexOf("1")!= -1){ // value exist
-      //   // alert("123");
-      // }else{
-      //     myApp.addNotification({
-      //         message: "Tidak Terdapat Calon Pelanggan",
-      //         buttonkey:  {
-      //             text: 'Tutup',
-      //         },
-      //         hold : 5000
-      //     });
+      if(arr_cal.indexOf("1")!= -1){ // value exist
+        // alert("123");
+      }else{
+          myApp.addNotification({
+              message: "Tidak Terdapat Calon Pelanggan",
+              buttonkey:  {
+                  text: 'Tutup',
+              },
+              hold : 5000
+          });
 
-      // }                 
+      }                 
       clearMarkersTetap();
       // clearMarkersTetap();
       mainView.router.back();
@@ -5880,8 +5698,6 @@ $$('#form-login').on('form:success', function (e) {
          window.localStorage.setItem("ukm_nama", data.ukm.nama);
          window.localStorage.setItem("sisa", data.ukm.sisa);
          window.localStorage.setItem("point", data.poin.poin);
-         window.localStorage.setItem("minimal", data.ukm.minimal);
-         window.localStorage.setItem("delivery", data.ukm.delivery);
          var array_temp = [];
          $$.each(data.kategori_favorite,function(i,v){
           array_temp.push(v.jenis);
@@ -7187,42 +7003,11 @@ $$(document).on('ajaxStart', function (e) {
    
 });
 $$(document).on('ajaxComplete', function (e) {
-  myApp.hideIndicator();
-  if (e.detail.xhr.requestUrl.indexOf('autocomplete-languages.json') >= 0) {
-    // Don't show preloader for autocomplete demo requests
-    return;
-  }
-});
-
-$$('.open-password').on('click', function () {
-  // var password = 'test';
-  // myApp.modalLogin('Enter your email', function (password) {
-  //   // app.dialog.alert('Thank you!<br>Password:' + password);
-  // });
-  // console.log(myApp);
-  myApp.prompt( 'Masukan Email Anda', [ 'Lupa Password'],
-    function (value) {
-      if (value == '') {
-        myApp.alert('Email harap diisi', ['Peringatan']);
-      } else {
-        $$.ajax({
-          url: server+'/index.php?r=User/forgot_passwprd',
-          method: 'GET',
-          data : {email: value},
-          // dataType: 'json',
-          success:function(data){
-            myApp.alert('Silahkan check email anda', ['']);
-          },
-          error:function(err){
-            console.log(err);
-          }
-        });
-      }
-    },
-    function(value) {
-      myApp.alert('silahkan check email anda', ['']);
+       myApp.hideIndicator();
+    if (e.detail.xhr.requestUrl.indexOf('autocomplete-languages.json') >= 0) {
+        // Don't show preloader for autocomplete demo requests
+        return;
     }
-  );
 });
 
 // Callbacks for specific pages when it initialized
