@@ -2188,6 +2188,7 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
         }
 
     });
+
     final_order_head.push(
         {
             "username":window.localStorage.getItem("username"),
@@ -6216,11 +6217,14 @@ $$('#form-register').on('form:success', function (e) {
   function cekLevel(){
 
 
-
-     if (window.localStorage.getItem("ukm_tipe")=="3"){ //jika penjual kliling
+    var lev = window.localStorage.getItem("ukm_tipe");
+     if (lev=="3" || lev=="2"){ //jika penjual kliling
+        if (!isNaN(window.localStorage.getItem("ukm_id")) ){   
          $$("#li_button_panggilan").show();
          $$(".wrapper-tracking").show();
          $$(".notification-panggilan").show();
+        }
+
       }else{
          $$(".notification-panggilan").hide();
         $$("#li_button_panggilan").hide();
@@ -6257,9 +6261,13 @@ $$('#form-register').on('form:success', function (e) {
             $$("#box-poin").show();
             $$(".btn-data-umkm").hide();
             $$("#li_button_kat_fav").show();
+            $$(".btn-list-order").hide();
+            $$(".btn-list-order").css("display","flex");
 
         }else{
             $$(".float-button-cepat").hide(); // add float button
+            $$(".btn-list-order").css("display","flex");
+            // $$(".btn-list-order").show();
 
         }
 
@@ -6308,7 +6316,7 @@ $$('#form-register').on('form:success', function (e) {
        $$(".btn-tambah-penjual").hide();
         $$(".float-button-cepat").hide();
          $$(".btn-dashboard-admin").hide();
-         $$(".btn-list-order").hide();
+         
      }
 
   }
