@@ -2245,6 +2245,9 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
 function roundToTwo(num) {    
     return +(Math.round(num + "e+2")  + "e-2");
 }
+$$(document).on("click","#li_button_peng_saya",function(e){
+ mainView.router.loadPage({url:'pengaturan.html', ignoreCache:true, reload:true })
+});
 $$(document).on("click",".btn-check-out",function(e){
     var order = [];
     var ttl = 0;
