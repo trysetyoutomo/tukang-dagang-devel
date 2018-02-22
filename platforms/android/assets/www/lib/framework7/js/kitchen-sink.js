@@ -7353,33 +7353,42 @@ $$(document).on('ajaxComplete', function (e) {
   }
 });
 
+
 $$('.open-password').on('click', function () {
-  // var password = 'test';
-  // myApp.modalLogin('Enter your email', function (password) {
-  //   // app.dialog.alert('Thank you!<br>Password:' + password);
-  // });
-  // console.log(myApp);
   myApp.prompt( 'Masukan Email Anda', [ 'Lupa Password'],
     function (value) {
       if (value == '') {
-        myApp.alert('Email harap diisi', ['Peringatan']);
+        customAlert('Email harap diisi', 'Peringatan');
       } else {
-        $$.ajax({
-          url: server+'/index.php?r=User/forgot_passwprd',
-          method: 'GET',
-          data : {email: value},
-          // dataType: 'json',
-          success:function(data){
-            myApp.alert('Silahkan check email anda', ['']);
-          },
-          error:function(err){
-            console.log(err);
-          }
-        });
+        if (validateEmail(value)) {
+          $$.ajax({
+            url: server+'/index.php?r=gis/getForgotPassword',
+            method: 'GET', 
+            data : {email: value},
+            success:function(data){
+              var dataObj  = JSON.parse(data)
+              if (dataObj.status) {
+                
+                /** encode username */
+                var encodeuser = btoa(dataObj.data.username);
+                window.localStorage.setItem('username', encodeuser)
+                
+                customAlert('Kami telah mengirimkan link untuk reset password, Silahkan check email anda', 'Informasi');
+              } else {
+                customAlert(dataObj.message, 'Peringatan');
+              }
+            },
+            error:function(err){
+              console.log(err);
+            }
+          });
+        } else {
+          customAlert('Format email salah', 'Peringatan');
+        }  
       }
     },
     function(value) {
-      myApp.alert('silahkan check email anda', ['']);
+      // myApp.alert('silahkan check email anda', ['']);
     }
   );
 });
