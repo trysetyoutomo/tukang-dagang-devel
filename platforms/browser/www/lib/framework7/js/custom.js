@@ -24,9 +24,8 @@ $$(document).on('submit', '#form-reset-password', function (e) {
     var password   = $$("#password").val(); 
     var repassword = $$("#repassword").val();
     var decodeuser = atob(window.localStorage.getItem('username'));
-    if (password != repassword) {
-        myApp.alert('password tidak sama', ['Peringatan']);
-    } else {
+    if (password != repassword) { myApp.alert('password tidak sama', ['Peringatan']); } 
+    else {
         $$.ajax({
             url: server+"/index.php?r=api/postforgotpassword",
             data: {password: password, repassword: repassword, username: decodeuser},
