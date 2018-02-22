@@ -3995,7 +3995,6 @@ function getListOrder(username){
 
           '</div>'+
           '</li>';
-        
           $$(idString).append(html);
         
         });
