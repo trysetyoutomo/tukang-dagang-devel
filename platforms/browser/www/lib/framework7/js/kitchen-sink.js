@@ -4672,12 +4672,12 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
               if (v.id==window.localStorage.getItem("ukm_id")){
                 panggil = " Usahaku ";
               }else{
-                panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
+                // panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
                 panggil+= "<a style='display:inline;color:black' ukm_id="+v.id+" class='link icon-only' href='tabs-swipeable.html?id="+v.id+"'' ><i class='fa fa-info fa-2x'></i>&nbsp;&nbsp;Informasi&nbsp;&nbsp;&nbsp;&nbsp;</a>"
                 panggil+= "<a style='display:inline;color:black' ukm-id='"+v.id+"'  class='btn-favorite' ><i class='fa fa-star fa-2x'></i>&nbsp;&nbsp;Favorit</a>"
               }          
             }else{
-                panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
+                // panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
                 panggil+= "<a style='display:inline;color:black' ukm_id="+v.id+" class='link icon-only' href='tabs-swipeable.html?id="+v.id+"'' ><i class='fa fa-info fa-2x'></i>&nbsp;&nbsp;Informasi&nbsp;&nbsp;&nbsp;&nbsp;</a>"
                 panggil+= "<a style='display:inline;color:black' ukm-id='"+v.id+"'  class='btn-favorite' ><i class='fa fa-star fa-2x'></i>&nbsp;&nbsp;Favorit</a>"
                  // panggil+= "<br><div ukm_id="+v.id+" class='btn-tracking-ukm'><i class='fa fa-send'></i>&nbsp;&nbsp;Tracking</div>"
