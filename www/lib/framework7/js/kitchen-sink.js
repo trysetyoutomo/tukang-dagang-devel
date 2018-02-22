@@ -2139,15 +2139,14 @@ function GetProdukByUMKM(id){
                 '<div class="item-media"><img src="'+img+'" width="80"></div>'+
                 '<div class="item-inner">'+
                     '<div class="item-title-row" style="background-image:url()">'+
-                          '<div class="item-title" style="width: 150px;"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
-                        // '<div class="item-after" > </div>'+
-                          '<div class="item-after" style="width:100px;float:right">'+
-                                '<i style="float:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
-                                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="text" value="0" style="width:40px;border:1px solid gray;padding:5px;display:inline-block" />'+
-                        '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
+                          '<div class="item-title" style="width: 150px; margin-top: 20px"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
+                          '<div class="item-after" style="width:50px;float:right; margin-top: 30px">'+
+                                '<i style="float:none;display:none; font-size: 1.5em" class="fa fa-minus-circle btn-min-qty"></i>&nbsp;'+
+                                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="number" value="0" style="width:40px;border:0px solid gray;padding:0 15px 11px;display:inline-block" />'+
+                        '&nbsp;<i class="fa fa-plus-square btn-add-qty" style="font-size: 1.5em" ></i>'
                   '</div>'+
                 '</div>'+
-
+                // '&nbsp;<i class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
                 '</div>'+
                 '</a>'+
                 '</li>';
@@ -2156,13 +2155,36 @@ function GetProdukByUMKM(id){
               });
 
           }else{
-              $$("#cart-beli").append("<p> Data TIdak Ditemukan </p>");
+              $$("#cart-beli").append("<p style='text-align:center'> Data TIdak Ditemukan </p>");
 
           }
             
         }
     });
 }
+
+
+/** event untuk menambah pesanan */
+$$(document).on("click",".btn-add-qty",function(e){
+  var index = $(".btn-add-qty").index(this);
+  var jml = parseInt($('.order-qty').eq(index).val()) +1;
+  $('.order-qty').eq(index).val(jml);
+  $('.btn-min-qty').show();
+  $('.item-after').css('width','68px');
+
+});
+
+/** event untuk mengurangi pesanan */
+$$(document).on("click",".btn-min-qty",function(e){
+  var index = $(".btn-min-qty").index(this);
+  var jml = parseInt($('.order-qty').eq(index).val()) -1;
+  $('.order-qty').eq(index).val(jml);
+  if (jml <= 0) {
+    $('.btn-min-qty').hide();
+    $('.item-after').css('width','50px');
+  }
+  // console.log(jml);
+});
 
 $$(document).on("click",".btn-panggil-pesan",function(e){
     var final_order_head = [];
@@ -2355,25 +2377,6 @@ $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     // GetProdukByUMKM(id);
 });
 
-
-$$(document).on("click",".btn-add-qty",function(e){
-    // alert(nama);
-    // alert(harga);
-    // alert(nama);
-    var index = $(".btn-add-qty").index(this);
-    var jml = parseInt($('.order-qty').eq(index).val()) +1;
-    $('.order-qty').eq(index).val(jml);
-
-});
-$$(document).on("click",".btn-min-qty",function(e){
-    var index = $(".btn-min-qty").index(this);
-    // if (parseInt($('.order-qty').eq(index).val())>0){    
-        var jml = parseInt($('.order-qty').eq(index).val()) -1;
-        $('.order-qty').eq(index).val(jml);
-    // }    
-
-
-});
 $$(document).on("click",".btn-add-cart",function(e){
   if (window.localStorage.getItem("isLogged")!="1"){
       myApp.loginScreen();
