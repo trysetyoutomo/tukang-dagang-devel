@@ -34,6 +34,7 @@ $$(document).on('submit', '#form-reset-password', function (e) {
                 var dataObj  = JSON.parse(data)
                 if (dataObj.status) { 
                     myApp.alert(dataObj.message, 'Informasi', function () {
+                        window.localStorage.removeItem('username');
                         window.location.assign("http://localhost:3000/main.html");
                     });
                 } else {
