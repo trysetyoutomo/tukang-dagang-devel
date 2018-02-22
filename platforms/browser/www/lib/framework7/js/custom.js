@@ -28,7 +28,7 @@ $$(document).on('submit', '#form-reset-password', function (e) {
         myApp.alert('password tidak sama', ['Peringatan']);
     } else {
         $$.ajax({
-            url: server+"/index.php?r=gis/postforgotpassword",
+            url: server+"/index.php?r=api/postforgotpassword",
             data: {password: password, repassword: repassword, username: decodeuser},
             success:function(data){
                 var dataObj  = JSON.parse(data)
@@ -42,7 +42,7 @@ $$(document).on('submit', '#form-reset-password', function (e) {
                 }
              },
             error:function(err){
-                console.log(err);
+                customAlert('Oops terjadi kesalahan', 'Peringatan');
             }
         });
     } 

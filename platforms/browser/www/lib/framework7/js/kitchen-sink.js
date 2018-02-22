@@ -7364,7 +7364,7 @@ $$('.open-password').on('click', function () {
       } else {
         if (validateEmail(value)) {
           $$.ajax({
-            url: server+'/index.php?r=gis/getForgotPassword',
+            url: server+'/index.php?r=api/getForgotPassword',
             method: 'GET', 
             data : {email: value},
             success:function(data){
@@ -7381,7 +7381,7 @@ $$('.open-password').on('click', function () {
               }
             },
             error:function(err){
-              console.log(err);
+              customAlert('Oops terjadi kesalahan', 'Peringatan');
             }
           });
         } else {
