@@ -4066,6 +4066,20 @@ function getListOrder(username, tabActive){
       }
     });
   }
+  function getListOrderDagang(panggil_id){
+    $$.ajax({
+      url : server+"/index.php?r=UkmPanggil/getListOrderDagang",
+      data : "id="+panggil_id,
+      success : function(r){
+        var data = JSON.parse(r);
+        return data;
+        // alert(JSON.stringify(data));
+      }
+    });
+   }
+
+
+
   function getListPanggilan(){
 
      $$("#ul-panggilan-list").html("");
@@ -4210,6 +4224,22 @@ function getListOrder(username, tabActive){
 
    });
 
+     $$(document).on("click",'.btn-lihat-pesanan', function (e) {
+       e.preventDefault();
+       var id = $$(this).attr("panggil_id");
+       var ini = $$(this);
+       // alert(id);
+       mainView.router.load({
+          url:"view_order.html",
+          query:{
+            id: id
+          }    
+        });
+       
+       // getListOrderDagang(id);
+
+     });
+
      $$(document).on("click",'.btn-approve-calon', function (e) {
      e.preventDefault();
      var id = $$(this).attr("panggil_id");
@@ -4335,16 +4365,20 @@ function getListOrder(username, tabActive){
         }
       });
    }
+  $$(document).on('page:init', '.page[data-page="view_order"]', function (e) {
+      // var id = e.detail.id;
+      var page = e.detail.page;
+      var id = page.query.id;
+
+      var data = getListOrderDagang(id);
+      alert(JSON.stringify(data));
+  });
+
   $$(document).on('page:init', '.page[data-page="favorite-list"]', function (e) {
     refreshFavoritku();
-
      $$('.refresh-favoriteku').on('click', function () {
         refreshFavoritku();
      });
-
-
-  
-
   });
 
 
@@ -5435,6 +5469,11 @@ $$(document).on('click', '.refresh-rincian', function(e){
 $$(document).on('click', '.btn-yes-point', function(e){
   myApp.alert("Sedang dalam proses  ","Informasi");
 });
+
+// $$(document).on('click', '.btn-lihat-pesanan', function(e){
+  // alert("123");
+// });
+
 $$(document).on('click', '.btn-yes-point-iklan', function(e){
   $$.ajax({
     url : server+"/index.php?r=gis/KonfirmasiIklan",
@@ -8556,3 +8595,5 @@ $$('.open-password').on('click', function () {
 //             );
 //     });
 // });
+
+
