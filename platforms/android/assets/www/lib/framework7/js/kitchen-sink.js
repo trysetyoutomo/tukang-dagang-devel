@@ -2190,7 +2190,7 @@ $$(document).on("click",".btn-add-qty",function(e){
   var index = $(".btn-add-qty").index(this);
   var jml = parseInt($('.order-qty').eq(index).val()) +1;
   $('.order-qty').eq(index).val(jml);
-  $('.btn-min-qty').show();
+  $('.btn-min-qty').eq(index).show();
   $('.item-after').css('width','68px');
 
 });
@@ -2201,7 +2201,7 @@ $$(document).on("click",".btn-min-qty",function(e){
   var jml = parseInt($('.order-qty').eq(index).val()) -1;
   $('.order-qty').eq(index).val(jml);
   if (jml <= 0) {
-    $('.btn-min-qty').hide();
+    $('.btn-min-qty').eq(index).hide();
     $('.item-after').css('width','50px');
   }
   // console.log(jml);
@@ -2240,6 +2240,8 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
             "alamat":$$(".alamat-kirim").html(),
             "lat":$$("#val-lat").val(),
             "lng":$$("#val-lon").val(),
+            "jarak":$$(".order-jarak").attr("order-jarak-val"),
+            "total":final_order,
             "produk":final_order
         }
     );
@@ -2385,13 +2387,19 @@ $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
                 $$("#cart-beli-cekout").append(string);
           });
           $$("#total-biaya").html(numberWithCommas(total_order) );
+          $$("#total-biaya").attr("value",total_order);
             var jarak = roundToTwo(getDistance($$("#val-lat").val(),$$("#val-lon").val(),$$(".UMKM_lat").html(),$$(".UMKM_lon").html(),"K"));
+            var jarak_murni = roundToTwo(getDistance($$("#val-lat").val(),$$("#val-lon").val(),$$(".UMKM_lat").html(),$$(".UMKM_lon").html(),"K"));
+            // var jarak_murni = 0;
             if (jarak<1){
                 jarak = jarak*1000+" Meter";
+                // jarak_murni = jarak
             }else{
+                // jarak = jarak * 1 +"Kilo Meter"
                 jarak = jarak * 1 +"Kilo Meter"
             }
             $$(".order-jarak").html(jarak);
+            $$(".order-jarak").attr("order-jarak-val",jarak_murni);
             // alert(jarak);
 
 
