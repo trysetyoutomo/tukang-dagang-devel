@@ -2254,11 +2254,12 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
             "alamat":$$(".alamat-kirim").html(),
             "lat":$$("#val-lat").val(),
             "lng":$$("#val-lon").val(),
-            "jarak":$$(".order-jarak").attr("order-jarak-val"),
-            "total":final_order,
+            "jarak":$$(".order-jarak").attr("meter"),
+            "total":$$("#total-biaya").attr("value"),
             "produk":final_order
         }
     );
+    // alert($$(".order-jarak").attr("order-jarak-val"));
 
     $$.ajax({
         url : server+"/index.php?r=Ukm/PanggilPesanUkm",
@@ -2282,7 +2283,7 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
           }else{
     
              myApp.addNotification({
-                  message: "Pesan Berhasil Dikirim !",
+                  message: "Pesanan Berhasil Dikirim ke Tukang Dagang !",
                   buttonkey:  {
                       text: 'Tutup',
                       // color: 'lightgreen'
@@ -2404,16 +2405,18 @@ $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
           $$("#total-biaya").attr("value",total_order);
             var jarak = roundToTwo(getDistance($$("#val-lat").val(),$$("#val-lon").val(),$$(".UMKM_lat").html(),$$(".UMKM_lon").html(),"K"));
             var jarak_murni = roundToTwo(getDistance($$("#val-lat").val(),$$("#val-lon").val(),$$(".UMKM_lat").html(),$$(".UMKM_lon").html(),"K"));
+            var meter = jarak*1000;
             // var jarak_murni = 0;
             if (jarak<1){
                 jarak = jarak*1000+" Meter";
                 // jarak_murni = jarak
             }else{
                 // jarak = jarak * 1 +"Kilo Meter"
-                jarak = jarak * 1 +"Kilo Meter"
+                jarak = jarak * 1 +" Kilo Meter"
             }
             $$(".order-jarak").html(jarak);
             $$(".order-jarak").attr("order-jarak-val",jarak_murni);
+            $$(".order-jarak").attr("meter",meter);
             // alert(jarak);
 
 
