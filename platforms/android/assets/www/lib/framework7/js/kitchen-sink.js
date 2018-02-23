@@ -2161,7 +2161,7 @@ function GetProdukByUMKM(id){
                 '<div class="item-inner">'+
                     '<div class="item-title-row" style="background-image:url()">'+
                           '<div class="item-title" style="width: 150px; margin-top: 20px"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
-                          '<div class="item-after" style="width:50px;float:right; margin-top: 30px">'+
+                          '<div class="item-after'+' '+i+'" style="float:right; margin-top: 30px">'+
                                 '<i style="float:none;display:none; font-size: 1.5em" class="fa fa-minus-circle btn-min-qty"></i>&nbsp;'+
                                 '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="number" value="0" style="width:40px;border:0px solid gray;padding:5px 3px 16px 10px;display:inline-block" />'+
                         '&nbsp;<i class="fa fa-plus-square btn-add-qty" style="font-size: 1.5em" ></i>'
@@ -2197,12 +2197,8 @@ $$(document).on("click",".btn-add-qty",function(e){
   var jml = parseInt($('.order-qty').eq(index).val()) +1;
   $('.order-qty').eq(index).val(jml);
   $('.btn-min-qty').eq(index).show();
-// <<<<<<< HEAD
-  $('.item-after').css('width','68px');
-// =======
-  $('.item-after').eq(index).css('width','68px');
-// >>>>>>> 027e4d0345812f8d18e6cae5b3a5b29b9ff905d2
-
+  $('.item-after').css('width','68px !important');
+  // console.log($('.item-after').eq(index));
 });
 
 /** event untuk mengurangi pesanan */
@@ -2212,13 +2208,10 @@ $$(document).on("click",".btn-min-qty",function(e){
   $('.order-qty').eq(index).val(jml);
   if (jml <= 0) {
     $('.btn-min-qty').eq(index).hide();
-// <<<<<<< HEAD
-    $('.item-after').css('width','50px');
-// =======
-    // $('.item-after').eq(index).css('width','50px');
-// >>>>>>> 027e4d0345812f8d18e6cae5b3a5b29b9ff905d2
+    $('.item-after'+' '+index).css('width','68px !important');
+    // $('.item-after').css('width','50px');
+    // console.log(index);
   }
-  // console.log(jml);
 });
 
 $$(document).on("click",".btn-panggil-pesan",function(e){
@@ -2289,8 +2282,9 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
                       // color: 'lightgreen'
                     }
               });
+              var tabActive = $('.tabbar.pesanan a.tertunda').attr('href');
+              getListOrder(window.localStorage.getItem("username"), tabActive);
               mainView.router.loadPage({url:'order.html', ignoreCache:true, reload:true });
-              getListOrder(window.localStorage.getItem("username"));
 
               // $$(".btn-refresh-order").trigger("click");
               // mainView.router.back();
@@ -3960,22 +3954,22 @@ $$(document).on('click', '.btn-refresh-order', function (e) {
   var tabActive = $('.tabbar.pesanan a.active:not(.tertunda)').attr('href') 
   if (tabActive == undefined) tabActive = "#tab-1"; 
   getListOrder(window.localStorage.getItem("username"), tabActive);
+  console.log(tabActive);
 });
 
 $$(document).on('page:init', '.page[data-page="order"]', function (e) {
   var tabActive = $('.tabbar.pesanan a.tertunda').attr('href'); 
   getListOrder(window.localStorage.getItem("username"), tabActive);
-    $$(".order-qty-notif").hide();
-    $$(".order-qty-notif").html(0);
-    getListOrder(window.localStorage.getItem("username"));
+  $$(".order-qty-notif").hide();
+  $$(".order-qty-notif").html(0);
 
 });
 
 $$(document).on('click', '.tab-link', function(){
   getListOrder(window.localStorage.getItem("username"), $(this).attr('href')); 
+  console.log($(this).attr('href'));
 });
 function getListOrder(username, tabActive){
-    $$("#order-pending").html("");
     $$.ajax({
       url : server+"/index.php?r=UkmPanggil/getListOrder",
       data : "username="+username,
