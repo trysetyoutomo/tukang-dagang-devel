@@ -397,18 +397,37 @@ var pusher = new Pusher('3d0c6896d79a0df7db6e', {
 var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data) {
   // alert(data.message);
+
+
+  if (data.tipe=="notif_panggilan_approved"){
+    console.log("1"+data.username);
+    console.log("2"+window.localStorage.getItem("username"));
+    if (data.username==window.localStorage.getItem("username")){
+        // jika orang manggil maka 
+       myApp.addNotification({
+        title: 'Halo',
+        message: data.pesan
+       });
+       var angka = parseInt($$(".order-qty-notif").html()) + 1;
+       $$(".order-qty-notif").html(angka);
+       $$(".order-qty-notif").css("display","inline-block");
+    }
+
+
+  }
   if (data.tipe=="notif_panggilan"){
     if (data.ukm_id==window.localStorage.getItem("ukm_id")){
       myApp.addNotification({
         title: 'Panggilan Baru',
         message: 'Terdapat Pengguna yang memanggil!'
       });
-      $$(".notification-panggilan").addClass("blink_me");
-      $$(".bulat-notif").show();
+      // $$(".notification-panggilan").addClass("blink_me");
+        var angka = parseInt($$(".panggilan-qty-notif").html()) + 1;
+       $$(".panggilan-qty-notif").html(angka);
+       $$(".panggilan-qty-notif").css("display","inline-block");
+      // $$(".bulat-notif").show();
        audio.play();
       try{
-
-      // jalan notifikasi 
 
       var pesan ;
       if (data.pesan==""){
@@ -425,7 +444,7 @@ channel.bind('my-event', function(data) {
           vibrate: true
       });
       cordova.plugins.notification.local.on('click', function (notification, eopts) {
-         $$(".notification-panggilan").trigger("click");
+         // $$(".notification-panggilan").trigger("click");
       });
       // cordova.plugins.notification.local.schedule({
       //     title: 'Panggilan Baru',
@@ -1052,6 +1071,8 @@ function onDeviceReady() {
  // $$(document).on('click', '.btn-panggil-login', function (e) {
  //     myApp.loginScreen();
  //    $("#defaultReal").realperson();
+ // });
+ // $$(document).on('click', '.order-qty-notif', function (e) {
  // });
  $$(document).on('click', '.notification-panggilan', function (e) {
     audio.pause();
@@ -2257,7 +2278,10 @@ $$(document).on("click",".btn-panggil-pesan",function(e){
                       // color: 'lightgreen'
                     }
               });
-              mainView.router.loadPage({url:'order.html', ignoreCache:true, reload:true })
+              mainView.router.loadPage({url:'order.html', ignoreCache:true, reload:true });
+              getListOrder(window.localStorage.getItem("username"));
+
+              // $$(".btn-refresh-order").trigger("click");
               // mainView.router.back();
               // window.location.reload();
           
@@ -3922,6 +3946,10 @@ $$(document).on('click', '.btn-refresh-order', function (e) {
 $$(document).on('page:init', '.page[data-page="order"]', function (e) {
   var tabActive = $('.tabbar.pesanan a.tertunda').attr('href'); 
   getListOrder(window.localStorage.getItem("username"), tabActive);
+    $$(".order-qty-notif").hide();
+    $$(".order-qty-notif").html(0);
+    getListOrder(window.localStorage.getItem("username"));
+
 });
 
 $$(document).on('click', '.tab-link', function(){
@@ -4017,6 +4045,7 @@ function getListOrder(username, tabActive){
     });
   }
   function getListPanggilan(){
+
      $$("#ul-panggilan-list").html("");
     $$.ajax({
       url : server+"/index.php?r=gis/getListPanggilan",
@@ -4044,9 +4073,9 @@ function getListOrder(username, tabActive){
           }else if (data.status==1){
             status_sampai = "<span style='color:green'>Selesai</span>";
           }else if (data.status==2){
-            status_sampai = "<span style='color:black'>Batal</span>";
+            status_sampai = "<span style='color:red'>Batal</span>";
           }else if (data.status==3){
-            status_sampai = "<span style='color:black'>Proses</span>";
+            status_sampai = "<span style='color:green'>Proses</span>";
             style="style='display:none'";
             style_done="style='display:flex'";
           }
@@ -4114,6 +4143,10 @@ function getListOrder(username, tabActive){
   //     // alert("masuk");
   // });
   $$(document).on('page:init', '.page[data-page="panggilan-list"]', function (e) {
+    
+    $$(".panggilan-qty-notif").hide();
+    $$(".panggilan-qty-notif").html(0);
+    
     getListPanggilan();
     // alert(JSON.stringify(calon_pembeli_pos));   
     // $$.ajax({
@@ -4685,12 +4718,12 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
               if (v.id==window.localStorage.getItem("ukm_id")){
                 panggil = " Usahaku ";
               }else{
-                panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
+                // panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
                 panggil+= "<a style='display:inline;color:black' ukm_id="+v.id+" class='link icon-only' href='tabs-swipeable.html?id="+v.id+"'' ><i class='fa fa-info fa-2x'></i>&nbsp;&nbsp;Informasi&nbsp;&nbsp;&nbsp;&nbsp;</a>"
                 panggil+= "<a style='display:inline;color:black' ukm-id='"+v.id+"'  class='btn-favorite' ><i class='fa fa-star fa-2x'></i>&nbsp;&nbsp;Favorit</a>"
               }          
             }else{
-                panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
+                // panggil = "<div style='display:inline' ukm_id="+v.id+" class='btn-panggil-ukm'><i class='fa fa-volume-up fa-2x'></i>&nbsp;&nbsp;panggil &nbsp;&nbsp;&nbsp;&nbsp;</div>";
                 panggil+= "<a style='display:inline;color:black' ukm_id="+v.id+" class='link icon-only' href='tabs-swipeable.html?id="+v.id+"'' ><i class='fa fa-info fa-2x'></i>&nbsp;&nbsp;Informasi&nbsp;&nbsp;&nbsp;&nbsp;</a>"
                 panggil+= "<a style='display:inline;color:black' ukm-id='"+v.id+"'  class='btn-favorite' ><i class='fa fa-star fa-2x'></i>&nbsp;&nbsp;Favorit</a>"
                  // panggil+= "<br><div ukm_id="+v.id+" class='btn-tracking-ukm'><i class='fa fa-send'></i>&nbsp;&nbsp;Tracking</div>"
@@ -4723,6 +4756,11 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
               '<a onClick="getDirection('+v.lat+','+v.lon+');" >'+
               '<i class="material-icons  md-30">directions</i>'+
               '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+
+              '<a ukm-id="'+v.id+'" ukm_id="'+v.id+'"  href="#" style="" class="btn-add-cart">'+
+              '<i class="fa fa-cart-plus fa-2x "></i>  '+
+              '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+
 
               '<a ukm-id="'+v.id+'"  href="tabs-swipeable.html?id='+v.id+'" style="" class="  ">'+
               '<i class="fa fa-info fa-2x "></i>  '+
