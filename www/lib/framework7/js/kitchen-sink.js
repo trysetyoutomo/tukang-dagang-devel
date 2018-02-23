@@ -2357,6 +2357,9 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
     var id =e.detail.page.query.id;
     GetProdukByUMKM(id);
 });
+$$(document).on('page:mounted', '.page[data-page="cekout"]', function (e) {
+  alert("masuk");
+});
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
   
@@ -4057,6 +4060,20 @@ function getListOrder(username, tabActive){
       }
     });
   }
+  function getListOrderDagang(panggil_id){
+    $$.ajax({
+      url : server+"/index.php?r=UkmPanggil/getListOrderDagang",
+      data : "id="+panggil_id,
+      success : function(r){
+        var data = JSON.parse(r);
+        return data;
+        // alert(JSON.stringify(data));
+      }
+    });
+   }
+
+
+
   function getListPanggilan(){
 
      $$("#ul-panggilan-list").html("");
@@ -4101,11 +4118,11 @@ function getListOrder(username, tabActive){
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
           '<div class="item-title-row">'+
-          '<div class="item-title">'+data.username+' </div>'+
+          '<div class="item-title" nomor='+data.username+'>'+data.nama_user+' </div>'+
           '<div class="item-after">'+moment(data.jam, "YYYY-MM-DD h:mm:ss").fromNow()+' </div>'+
           '</div>'+
           '<div class="item-subtitle">'+data.pesan+'</div>'+
-          '<div class="item-text">'+status_sampai+'</div>'+
+          '<div class="item-text">'+status_sampai+'<br>'+data.alamat+'</div>'+
           '</div>'+
           '</a>'+
           '</div>'+
@@ -4117,6 +4134,9 @@ function getListOrder(username, tabActive){
               // '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
               // '<i class="material-icons  md-30">directions</i>'+
               // '</a>'+
+              '<a class="bg-gray external btn-lihat-pesanan" '+style+' panggil_id="'+data.id+'"  >'+
+              '<i class="fa fa-list-ol external"></i>'+
+              '</a>'+
               '<a class="bg-red external btn-delete-calon" '+style+' panggil_id="'+data.id+'"  >'+
               '<i class="fa fa-times external"></i>'+
               '</a>'+
@@ -4197,6 +4217,22 @@ function getListOrder(username, tabActive){
       });
 
    });
+
+     $$(document).on("click",'.btn-lihat-pesanan', function (e) {
+       e.preventDefault();
+       var id = $$(this).attr("panggil_id");
+       var ini = $$(this);
+       // alert(id);
+       mainView.router.load({
+          url:"view_order.html",
+          query:{
+            id: id
+          }    
+        });
+       
+       // getListOrderDagang(id);
+
+     });
 
      $$(document).on("click",'.btn-approve-calon', function (e) {
      e.preventDefault();
@@ -4323,16 +4359,20 @@ function getListOrder(username, tabActive){
         }
       });
    }
+  $$(document).on('page:init', '.page[data-page="view_order"]', function (e) {
+      // var id = e.detail.id;
+      var page = e.detail.page;
+      var id = page.query.id;
+
+      var data = getListOrderDagang(id);
+      alert(JSON.stringify(data));
+  });
+
   $$(document).on('page:init', '.page[data-page="favorite-list"]', function (e) {
     refreshFavoritku();
-
      $$('.refresh-favoriteku').on('click', function () {
         refreshFavoritku();
      });
-
-
-  
-
   });
 
 
@@ -5308,7 +5348,7 @@ $$(document).on('click', '.btn-get-calon', function(e){
           anchor: new google.maps.Point(0, 0) // anchor
       };
       clearMarkersCalon();
-      alert(JSON.stringify(calon_pembeli_pos));
+      // alert(JSON.stringify(calon_pembeli_pos));
   if (calon_pembeli_pos.length>0){
       var arr_cal = [];  
 
@@ -5319,10 +5359,11 @@ $$(document).on('click', '.btn-get-calon', function(e){
          var marker_calon = new google.maps.Marker({
           position : new google.maps.LatLng(v.caller_lat,v.caller_lng),
             map : map,
-            title: v.username,
+            // title: v.username,
+            title: v.nama_user,
             // draggable:isdrag,
             label: {
-              text: v.username,
+              text: v.nama_user,
               color: 'black',
             },
             animation: google.maps.Animation.DROP,
@@ -5422,6 +5463,11 @@ $$(document).on('click', '.refresh-rincian', function(e){
 $$(document).on('click', '.btn-yes-point', function(e){
   myApp.alert("Sedang dalam proses  ","Informasi");
 });
+
+// $$(document).on('click', '.btn-lihat-pesanan', function(e){
+  // alert("123");
+// });
+
 $$(document).on('click', '.btn-yes-point-iklan', function(e){
   $$.ajax({
     url : server+"/index.php?r=gis/KonfirmasiIklan",
@@ -8543,3 +8589,5 @@ $$('.open-password').on('click', function () {
 //             );
 //     });
 // });
+
+
