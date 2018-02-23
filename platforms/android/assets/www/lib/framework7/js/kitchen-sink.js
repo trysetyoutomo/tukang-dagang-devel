@@ -2363,6 +2363,9 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
     var id =e.detail.page.query.id;
     GetProdukByUMKM(id);
 });
+$$(document).on('page:mounted', '.page[data-page="cekout"]', function (e) {
+  alert("masuk");
+});
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
   
