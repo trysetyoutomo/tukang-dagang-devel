@@ -4107,11 +4107,11 @@ function getListOrder(username, tabActive){
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
           '<div class="item-title-row">'+
-          '<div class="item-title">'+data.username+' </div>'+
+          '<div class="item-title" nomor='+data.username+'>'+data.nama_user+' </div>'+
           '<div class="item-after">'+moment(data.jam, "YYYY-MM-DD h:mm:ss").fromNow()+' </div>'+
           '</div>'+
           '<div class="item-subtitle">'+data.pesan+'</div>'+
-          '<div class="item-text">'+status_sampai+'</div>'+
+          '<div class="item-text">'+status_sampai+'<br>'+data.alamat+'</div>'+
           '</div>'+
           '</a>'+
           '</div>'+
@@ -4123,6 +4123,9 @@ function getListOrder(username, tabActive){
               // '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
               // '<i class="material-icons  md-30">directions</i>'+
               // '</a>'+
+              '<a class="bg-gray external btn-lihat-pesanan" '+style+' panggil_id="'+data.id+'"  >'+
+              '<i class="fa fa-list-ol external"></i>'+
+              '</a>'+
               '<a class="bg-red external btn-delete-calon" '+style+' panggil_id="'+data.id+'"  >'+
               '<i class="fa fa-times external"></i>'+
               '</a>'+
@@ -5314,7 +5317,7 @@ $$(document).on('click', '.btn-get-calon', function(e){
           anchor: new google.maps.Point(0, 0) // anchor
       };
       clearMarkersCalon();
-      alert(JSON.stringify(calon_pembeli_pos));
+      // alert(JSON.stringify(calon_pembeli_pos));
   if (calon_pembeli_pos.length>0){
       var arr_cal = [];  
 
@@ -5325,10 +5328,11 @@ $$(document).on('click', '.btn-get-calon', function(e){
          var marker_calon = new google.maps.Marker({
           position : new google.maps.LatLng(v.caller_lat,v.caller_lng),
             map : map,
-            title: v.username,
+            // title: v.username,
+            title: v.nama_user,
             // draggable:isdrag,
             label: {
-              text: v.username,
+              text: v.nama_user,
               color: 'black',
             },
             animation: google.maps.Animation.DROP,
