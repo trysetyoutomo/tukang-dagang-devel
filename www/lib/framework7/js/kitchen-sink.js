@@ -2163,7 +2163,7 @@ function GetProdukByUMKM(id){
                           '<div class="item-title" style="width: 150px; margin-top: 20px"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
                           '<div class="item-after" style="width:50px;float:right; margin-top: 30px">'+
                                 '<i style="float:none;display:none; font-size: 1.5em" class="fa fa-minus-circle btn-min-qty"></i>&nbsp;'+
-                                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="number" value="0" style="width:40px;border:0px solid gray;padding:0 15px 11px;display:inline-block" />'+
+                                '<input item_id="'+v.id+'" ukm_id="'+id+'" class="order-qty"  type="number" value="0" style="width:40px;border:0px solid gray;padding:5px 3px 16px 10px;display:inline-block" />'+
                         '&nbsp;<i class="fa fa-plus-square btn-add-qty" style="font-size: 1.5em" ></i>'
                   '</div>'+
                 '</div>'+
@@ -2176,7 +2176,7 @@ function GetProdukByUMKM(id){
               });
 
           }else{
-              $$("#cart-beli").append("<p style='text-align:center'> Data TIdak Ditemukan </p>");
+              $$("#cart-beli").append("<p style='text-align:center;padding: 15px;font-family: inherit;'> Data TIdak Ditemukan </p>");
 
           }
             
@@ -2185,13 +2185,23 @@ function GetProdukByUMKM(id){
 }
 
 
+/** event remove class ripple-wave */
+$$(document).on("click",".item-link.item-content",function(e){
+  $('.ripple-wave').remove();
+
+});
+
 /** event untuk menambah pesanan */
 $$(document).on("click",".btn-add-qty",function(e){
   var index = $(".btn-add-qty").index(this);
   var jml = parseInt($('.order-qty').eq(index).val()) +1;
   $('.order-qty').eq(index).val(jml);
   $('.btn-min-qty').eq(index).show();
+// <<<<<<< HEAD
   $('.item-after').css('width','68px');
+// =======
+  $('.item-after').eq(index).css('width','68px');
+// >>>>>>> 027e4d0345812f8d18e6cae5b3a5b29b9ff905d2
 
 });
 
@@ -2202,7 +2212,11 @@ $$(document).on("click",".btn-min-qty",function(e){
   $('.order-qty').eq(index).val(jml);
   if (jml <= 0) {
     $('.btn-min-qty').eq(index).hide();
+// <<<<<<< HEAD
     $('.item-after').css('width','50px');
+// =======
+    // $('.item-after').eq(index).css('width','50px');
+// >>>>>>> 027e4d0345812f8d18e6cae5b3a5b29b9ff905d2
   }
   // console.log(jml);
 });
@@ -3940,59 +3954,64 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
 
 });
 $$(document).on('click', '.btn-refresh-order', function (e) {
-    getListOrder(window.localStorage.getItem("username"));
+  var tabActive = $('.tabbar.pesanan a.active:not(.tertunda)').attr('href') 
+  if (tabActive == undefined) tabActive = "#tab-1"; 
+  getListOrder(window.localStorage.getItem("username"), tabActive);
 });
+
 $$(document).on('page:init', '.page[data-page="order"]', function (e) {
+  var tabActive = $('.tabbar.pesanan a.tertunda').attr('href'); 
+  getListOrder(window.localStorage.getItem("username"), tabActive);
     $$(".order-qty-notif").hide();
     $$(".order-qty-notif").html(0);
     getListOrder(window.localStorage.getItem("username"));
 
 });
 
-function getListOrder(username){
-     $$("#order-pending").html("");
+$$(document).on('click', '.tab-link', function(){
+  getListOrder(window.localStorage.getItem("username"), $(this).attr('href')); 
+});
+function getListOrder(username, tabActive){
+    $$("#order-pending").html("");
     $$.ajax({
       url : server+"/index.php?r=UkmPanggil/getListOrder",
       data : "username="+username,
       success : function(r){
-       var data = JSON.parse(r);
+        var data = JSON.parse(r);
+        var style="";
+        
         $$("#order-proses").html("");
         $$("#order-batal").html("");
         $$("#order-selesai").html("");
         $$("#order-pending").html("");
-        var style="";
+        
          $$.each(data,function(i,data){
-          // alert(data);
-          // var pesan;
-          // if (data.pesan.length>0){
-          //   pesan = data.pesan;
-          // }else{
-          //   pesan = "Tidak ada pesan";
-          // }
-
-          // var status_sampai;
           if (data.status=="2"){
-            if (window.localStorage.getItem("username")==data.cancel_by)
-                s = "Di Batalkan Olehku ";
-            else
-                s = "Di Batalkan Tukang Dagang ";
-          }else{
-            s = " ";
-          }
+            if (window.localStorage.getItem("username")==data.cancel_by) s = "Di Batalkan Olehku ";
+            else s = "Di Batalkan Tukang Dagang ";
+          } else {  s = " "; }
 
-           var idString = "";
-          if (data.status=="0"){
-            idString = "#order-pending";
-            style = "style='display:flex'";
-          }else if (data.status=="1"){
-            idString = "#order-selesai";
-            style = "style='display:flex'";
-          }else if (data.status=="2"){
-            idString = "#order-batal";
-            style = "style='display:none'";
-          }else if (data.status=="3"){
-            idString = "#order-proses";
-            style = "style='display:none'";
+          var idString = "";
+          if (tabActive == '#tab-1') {
+            if (data.status=="0"){
+              idString = "#order-pending";
+              style = "style='display:flex'";
+            }
+          } else if(tabActive == '#tab-2') {
+            if (data.status=="1"){
+              idString = "#order-selesai";
+              style = "style='display:flex'";
+            }
+          } else if(tabActive == '#tab-3') {
+            if (data.status=="2"){
+              idString = "#order-batal";
+              style = "style='display:none'";
+            }
+          } else if(tabActive == '#tab-4') {
+            if (data.status=="3"){
+              idString = "#order-proses";
+              style = "style='display:flex'";
+            }
           }
 
           var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
