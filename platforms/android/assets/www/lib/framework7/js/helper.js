@@ -54,6 +54,11 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+function validateNumber(value) {
+    var re = /^[0-9]+$/;
+    return re.test(value);
+}
+
 function blink(selector){
     $(selector).fadeOut('slow', function(){
         $(this).fadeIn('slow', function(){
@@ -61,5 +66,4 @@ function blink(selector){
         });
     });
 }
-    
   
