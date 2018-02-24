@@ -3996,21 +3996,25 @@ function getListOrder(username, tabActive){
             if (data.status=="0"){
               idString = "#order-pending";
               style = "style='display:flex'";
+              style_batal = "style='display:flex'";
             }
           } else if(tabActive == '#tab-2') {
             if (data.status=="1"){
               idString = "#order-selesai";
               style = "style='display:flex'";
+              style_batal = "style='display:none'";
             }
           } else if(tabActive == '#tab-3') {
             if (data.status=="2"){
               idString = "#order-batal";
               style = "style='display:none'";
+              style_batal = "style='display:none'";
             }
           } else if(tabActive == '#tab-4') {
             if (data.status=="3"){
               idString = "#order-proses";
               style = "style='display:flex'";
+              style_batal = "style='display:none'";
             }
           }
 
@@ -4035,10 +4039,10 @@ function getListOrder(username, tabActive){
            // '<a class="bg-red" onClick="getDirection('+data.caller_lat+','+data.caller_lng+');" >'+
            //    '<i class="material-icons  md-30">directions</i>'+
            //    '</a>'+
-              '<a class="bg-red external btn-delete-calon" panggil_id="'+data.id+'"  >'+
+              '<a '+style_batal+' class="bg-red external btn-delete-calon" panggil_id="'+data.id+'"  >'+
               '<i class="fa fa-times external"></i>'+
               '</a>'+
-              '<a class="bg-orange red" href="tel:'+data.username+'" >'+
+              '<a  class="bg-orange red" href="tel:'+data.username+'" >'+
               '<i class="fa fa-phone external"></i>'+
               '</a>'+
               '<a class="bg-blue external" href="sms:'+data.username+'" >'+
