@@ -415,7 +415,26 @@ channel.bind('my-event', function(data) {
     }
 
 
+  }  
+
+  if (data.tipe=="notif_panggilan_selesai"){
+    // console.log("1"+data.username);
+    // console.log("2"+window.localStorage.getItem("username"));
+    if (data.username==window.localStorage.getItem("username")){
+        // jika orang manggil maka 
+       myApp.addNotification({
+        title: 'Halo',
+        message: data.pesan
+       });
+       var angka = parseInt($$(".order-qty-notif").html()) + 1;
+       $$(".order-qty-notif").html(angka);
+       $$(".order-qty-notif").css("display","inline-block");
+    }
+
+
   }
+
+
   if (data.tipe=="notif_panggilan"){
     if (data.ukm_id==window.localStorage.getItem("ukm_id")){
       myApp.addNotification({
@@ -2390,17 +2409,11 @@ $$(document).on('page:init', '.page[data-page="tambah-cart"]', function (e) {
     var id =e.detail.page.query.id;
     GetProdukByUMKM(id);
 });
-$$(document).on('page:mounted', '.page[data-page="cekout"]', function (e) {
-  alert("masuk");
-});
+// $$(document).on('page:mounted', '.page[data-page="cekout"]', function (e) {
+//   alert("masuk");
+// });
 $$(document).on('page:init', '.page[data-page="cekout"]', function (e) {
     var order =e.detail.page.query.order;
-  
-
-
-    // function getTotalOrder(){
-
-    // }
 
     var total_order = 0;
       if (order.length>0){
@@ -4304,7 +4317,7 @@ function getListOrder(username, tabActive){
       });
 
    });
-        $$(document).on("click",'.btn-selesai-calon', function (e) {
+    $$(document).on("click",'.btn-selesai-calon', function (e) {
      e.preventDefault();
      var id = $$(this).attr("panggil_id");
      var ini = $$(this);
