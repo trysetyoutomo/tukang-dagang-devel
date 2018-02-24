@@ -4842,7 +4842,7 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
               icon = server+"/icon/rumah-td.png";
               desc = "";
             }else if (v.tipe=="3"){ // jika pedagang keliling maka
-
+              // alert(v.kendaraan);
               if (v.kendaraan=="1"){
                 icon = server+"/icon/keliling.png";
                 desc = "";
@@ -5452,9 +5452,9 @@ $$('#row_User_pemilik').on('taphold', function (e) {
 $$(document).on('click', '.btn-get-calon', function(e){
      var icon = {
           url: server+"/icon/calon-call.png",
-          scaledSize: new google.maps.Size(20, 20), // scaled size
+          scaledSize: new google.maps.Size(40, 40), // scaled size
           origin: new google.maps.Point(0,0), // origin
-          labelOrigin: new google.maps.Point(20, 30),
+          labelOrigin: new google.maps.Point(20, 50),
           anchor: new google.maps.Point(0, 0) // anchor
       };
       clearMarkersCalon();
@@ -5465,9 +5465,9 @@ $$(document).on('click', '.btn-get-calon', function(e){
       $$.each(calon_pembeli_pos,function(i,v){
         arr_cal.push(v.is_sampai);
          if (v.is_sampai=="0"){
-
+          var p = new google.maps.LatLng(v.caller_lat,v.caller_lng);
          var marker_calon = new google.maps.Marker({
-          position : new google.maps.LatLng(v.caller_lat,v.caller_lng),
+          position : p,
             map : map,
             // title: v.username,
             title: v.nama_user,
@@ -5480,6 +5480,7 @@ $$(document).on('click', '.btn-get-calon', function(e){
             icon : icon,
             tipe : 4
           });
+          map.setCenter(p);
 
            markers.push(marker_calon);
 
@@ -5487,26 +5488,30 @@ $$(document).on('click', '.btn-get-calon', function(e){
            // alert($$("#last_lng").val());
            var list = "<table>"+
             "<tr><td colspan='2' style='text-align:center '>"+
-            "<a ukm-id='"+v.id+"' href='#' data-panel='right' class='open-detail'>"+v.username+"</a>"+
+            "<a style='color:black'  ukm-id='"+v.id+"' href='#' data-panel='right' class='open-detail'>"+v.nama_user+"</a>"+
             "<br><hr></td></tr>"+
             "<tr><td colspan='2'>"+
                 '<p class="buttons-row " style="padding:0 8px 8px 8px">'+
                 
-                '<a class="link external" href="sms:'+v.username+'">'+
+                '<a style="color:black" class="btn-lihat-pesanan link external" panggil_id="'+v.id+'" >'+
+                '<i  class="fa fa-list-ol fa-2x"></i> '+
+                '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+
+                '<a style="color:black" class="link external" href="sms:'+v.username+'">'+
                 '<i  class="fa fa-envelope fa-2x"></i> '+
                 '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
 
-                '<a class="link external" href="tel:'+v.username+'">'+
+                '<a style="color:black" class="link external" href="tel:'+v.username+'">'+
                 '<i  class="fa fa-phone fa-2x"></i> '+
                 '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
 
-                '<a class="link external" href="https://api.whatsapp.com/send?phone=62'+v.username.substring(1,100)+'" >'+
-                '<i class="fa fa-whatsapp fa-2x"></i>'+
-                '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
+                // '<a class="link external" href="https://api.whatsapp.com/send?phone=62'+v.username.substring(1,100)+'" >'+
+                // '<i class="fa fa-whatsapp fa-2x"></i>'+
+                // '</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
 
-                '<a onclick="getDirection('+v.caller_lat+','+v.caller_lng+')"  class=" external">'+
-                '<i class="material-icons">directions</i>'+
-                '</a>'+
+                // '<a onclick="getDirection('+v.caller_lat+','+v.caller_lng+')"  class=" external">'+
+                // '<i class="material-icons">directions</i>'+
+                // '</a>'+
 
                 '</p>'+
 
@@ -6018,7 +6023,7 @@ function refreshUserData(){
                                     var d = getDistance(position.coords.latitude,position.coords.longitude,v.caller_lat,v.caller_lng,"K");
                                     var m = d*1000;
                                     console.log(m);
-                                    if (m<=20){ // jika jarak dibawah 15 meter maka
+                                    if (m<=30){ // jika jarak dibawah 15 meter maka
                                         calon_pembeli_pos = [];
                                         deleteCalonPembeli(v.username,v.ukm_id,v.id);
                                     } // end di bawah 20 meter
