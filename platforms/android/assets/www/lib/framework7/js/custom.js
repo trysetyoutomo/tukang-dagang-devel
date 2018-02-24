@@ -98,3 +98,43 @@ $$(document).on('click', '.open-minimum', function (e) {
 });
 
 blink('.realtime-circle-on');
+
+$$(document).on('click', '.open-nama-umkm', function (e) {
+    var ukm_id = window.localStorage.getItem("ukm_id");
+    myApp.prompt( 'Masukan Nama UMKM', [ 'Nama UMKM'],
+    function (value) {
+      if (value == '') {
+        customAlert('Nama UMKM harap diisi', 'Peringatan');
+        // console.log("kosong");
+      } else {
+        // console.log("terisi");
+        // console.log(value);
+        // if (validateNumber(value)) {
+            // console.log("angka");
+            $$.ajax({
+                url: server+"/index.php?r=api/PostSetting",
+                data: {
+                    ukm_id: ukm_id, 
+                    value: value,
+                    for_what:"nama", 
+                },
+                success:function(data){
+                    // console.log(data);
+                    // reload
+                    reloadSetting(ukm_id);
+                 },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        // } else {
+        //     console.log("bukan angka");
+        //     customAlert('Format harus angka', 'Peringatan');
+        // }  
+      }
+    },
+    function(value) {
+      // myApp.alert('silahkan check email anda', ['']);
+    }
+  );
+});
