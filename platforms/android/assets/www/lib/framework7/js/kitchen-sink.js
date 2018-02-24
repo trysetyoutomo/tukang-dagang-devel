@@ -275,8 +275,7 @@ var myApp = new Framework7({
     cache: false,
     tapHold: true, //enable tap hold events
     onPageInit: function (app, page) {
- 
-
+      $('.ripple-wave').remove();
 
 
 
