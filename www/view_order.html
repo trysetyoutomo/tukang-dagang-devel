@@ -33,10 +33,43 @@
           <!-- <a href="#" class="searchbar-cancel" style="display: block; margin-right: 0px;">Cancel</a> -->
       </form>
 
-    <div class="row">
-      <div class="col-100" style="padding:0">
+     <div class="row" style="margin: 15px">
+      <div class="col-100" style="padding:10px;border:1px solid lightgray">
+        <b>Pemesan</b>
+        <div class="well item-inner" style="height: 90px;padding:10px;">
+             <div class="row" style="width: 100%;">
+                <div class="col-10">
+                  <i class="fa fa-user fa-3x"></i>
+                </div>
+                <div class="col-85" >
+                    <div class="row">
+                      <div class="col-100" id="order-nama-user"></div>
+                      <div class="col-100" id="order-telepon"></div>
+                    </div>
+                    
+                </div>
+             </div>   
+        </div>
+      </div>  
+    </div>
+      <div class="row" style="margin: 15px">
+      <div class="col-100" style="padding:10px;border:1px solid lightgray">
+        <b>Lokasi Pemesan</b>
+        <div class="well item-inner alamat-kirim" style="height: 60px;padding:10px;">
+           Alamat tidak ditemukan 
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row" style="margin: 15px">
+      <div class="col-100" style="padding:10px;border:1px solid lightgray">
+      <b>Produk/Jasa</b>
         <!-- Pemesanan -->
-        <ul id="cart-beli-cekout"></ul>
+         <div class="well item-inner" style="padding:10px;">
+       
+          <ul id="cart-beli-cekout"></ul>
+        </div>
       </div>
     </div>
   
@@ -47,18 +80,11 @@
       <div class="col-100" style="padding:10px;border:1px solid lightgray">
         <b>Catatan</b>
         <div class="well item-inner" style="height: 60px;padding:10px;">
-            <textarea id="pesan-order" style="border: none;width: 100%;height: 100%"  placeholder="Isi Catatan"></textarea>
+            <textarea readonly="" id="pesan-order" style="border: none;width: 100%;height: 100%"  ></textarea>
         </div>
       </div>
     </div>
-     <div class="row" style="margin: 15px">
-      <div class="col-100" style="padding:10px;border:1px solid lightgray">
-        <b>Lokasiku</b>
-        <div class="well item-inner alamat-kirim" style="height: 60px;padding:10px;">
-           Alamat tidak ditemukan 
-        </div>
-      </div>
-    </div>
+   
   
 
        <div class="row" style="margin-left: 15px;margin-right: 15px">
@@ -85,7 +111,7 @@
       </div>
       </div>
 
-
+<!-- 
   <div class="row">
       <div class="col-100" style="padding:0 8px 8px 8px">
           <a style="color:white;" href="" class="button button-big button-fill button-raised bg-orange  btn-panggil-pesan ">
@@ -93,7 +119,7 @@
         </a>
 
       </div>
-    </div>
+    </div> -->
 
 
    </div>

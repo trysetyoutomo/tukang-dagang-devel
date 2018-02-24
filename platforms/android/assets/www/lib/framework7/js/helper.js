@@ -54,8 +54,19 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+<<<<<<< HEAD
 function validateNumber(value) {
     var re = /^[0-9]+$/;
     return re.test(value);
 }
+=======
+function blink(selector){
+    $(selector).fadeOut('slow', function(){
+        $(this).fadeIn('slow', function(){
+            blink(this);
+        });
+    });
+}
+    
+>>>>>>> 11cc31907947a9c41225e73e663979ec9365d1f4
   
