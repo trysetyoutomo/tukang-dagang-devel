@@ -855,11 +855,15 @@ function onDeviceReady() {
     initMap();
     cekLevel();
 
+    $('#realtime-on').hide();
     if (window.localStorage.getItem("tracking_client")=="realtime"){
       $$(".radio-realtime").attr("checked",true);
+      $('#realtime-on').show();
     }else{
       $$(".radio-refresh").attr("checked",true);
+      $('#realtime-on').hide();
     }
+    
 
     if (window.localStorage.getItem("isLogged")=="1"){
          $$(".btn-user-out").show();
@@ -4145,7 +4149,7 @@ function getListOrder(username, tabActive){
 
 
 
-          var html =  '<li wkwk  style="top: 0px;" class="  swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
+          var html =  '<li wkwk  style="top: 0px;" class="btn-lihat-pesanan swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
