@@ -2310,6 +2310,30 @@ function roundToTwo(num) {
 }
 $$(document).on("click","#li_button_peng_saya",function(e){
  mainView.router.loadPage({url:'pengaturan.html', ignoreCache:true, reload:true })
+ myApp.closePanel();
+  var ukm_id = window.localStorage.getItem("ukm_id");
+  $$.ajax({
+      url: server+"/index.php?r=api/PostSetting",
+      data: {
+          ukm_id: ukm_id, 
+          for_what:"get_all", 
+      },
+      success:function(data){
+          var data = JSON.parse(data);
+          console.log(data.delivery);
+          console.log(data.minimal);
+          $("#minimum-value").text(data.minimal);
+          if (data.delivery == 1) {
+            $("#check-tracking2-3").prop('checked', true);
+          }else{
+            $("#check-tracking2-3").prop('checked', false);
+          };
+       },
+      error:function(err){
+          console.log(err);
+      }
+  });
+ 
 });
 $$(document).on("click",".btn-check-out",function(e){
     var order = [];
