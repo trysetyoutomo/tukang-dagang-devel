@@ -1364,14 +1364,12 @@ function intervalTrigger() {
         loader_refresh = true;
         getDataNearest(pos.lat,pos.lng);
 
+        $('#realtime-on').hide();
         
    }else if ($$(".radio-realtime").is(":checked") ) {
-    // alert("456");
       value = "realtime";
-      // reaaltime
       buka_left = false;
-      // refresh_realtime = setInterval(intervalTrigger, 3000);
-     // var refresh_realtime =  intervalTrigger();
+      $('#realtime-on').show();
    }
    window.localStorage.setItem("tracking_client",value);
 
@@ -6306,15 +6304,12 @@ $$('#form-verifikasi').on('form:success', function (e) {
 
    
   }else{
-      // alert(data);
-    // myApp.alert(data.message);
      myApp.addNotification({
         title: 'Terdapat Kesalahan',
         message: data.message,
          hold : 3000
        });
   }
-
 });
 
 
@@ -8652,4 +8647,10 @@ $$('.open-password').on('click', function () {
 //     });
 // });
 
-
+// var status_tracking = window.localStorage.getItem('tracking_client');
+// if (status_tracking == 'realtime') {
+//   // $$('#realtime-on').show();
+// } else {
+//   $('#realtime-on').hide();
+// }
+blink('.realtime-circle-on');
