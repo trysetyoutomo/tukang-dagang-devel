@@ -4014,7 +4014,7 @@ function getListOrder(username, tabActive){
             }
           }
 
-          var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
+          var html =  '<li  style="top: 0px;" class="btn-lihat-pesanan swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
@@ -4027,7 +4027,7 @@ function getListOrder(username, tabActive){
           '</div>'+
           '</a>'+
           '</div>'+
-          '<div class="swipeout-actions-right " '+style+'>'+
+          '<div panggil_id="'+data.id+'" class=" btn-lihat-pesanan swipeout-actions-right " '+style+'>'+
           // '<a ukm-id="'+data.id+'"   class="pending-acc demo-mark bg-green  " style="left: 0px;"><i class="fa fa-check" ></i></a>'+
           // '<a ukm-id="'+data.id+'"   class="pending-reject demo-mark bg-red  " style="left: 0px;"><i class="fa fa-times" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="pending-info demo-mark bg-orange  " style="left: 0px;"><i class="fa fa-info" ></i></a>'+
@@ -4094,8 +4094,11 @@ function getListOrder(username, tabActive){
           var pesan;
           if (data.pesan.length>0){
             pesan = data.pesan;
+            $$(".btn-get-calon").show();
           }else{
             pesan = "Tidak ada pesan";
+            $$(".btn-get-calon").hide();
+
           }
 
           var status_sampai;
@@ -4117,7 +4120,7 @@ function getListOrder(username, tabActive){
 
 
 
-          var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
+          var html =  '<li wkwk  style="top: 0px;" class="  swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
@@ -4367,7 +4370,7 @@ function getListOrder(username, tabActive){
       // var id = e.detail.id;
       var page = e.detail.page;
       var id = page.query.id;
-      
+        
        // var data2 = [];
       $$.ajax({
         url : server+"/index.php?r=UkmPanggil/getListOrderDagang",
@@ -4397,14 +4400,23 @@ function getListOrder(username, tabActive){
                     '</div>'+
                     '</div>'+
                     '</a>'+
-                '</li>';
+                '</li>'; 
                 $$("#cart-beli-cekout").append(string);
           });
 
-          $$(".order-jarak").html(data.head.jarak);
+           // alert(JSON.stringify(data.head));
+          $$(".order-jarak").html(data.head.jarak+" Meter");
           $$("#total-biaya").html( numberWithCommas(data.head.total) );
           $$(".alamat-kirim").html( data.head.alamat );
-          $$("#pesan-order").val( data.head.pesan );
+          if (data.head.pesan!=""){
+            $$("#pesan-order").val( data.head.pesan );
+          }else{
+            $$("#pesan-order").val("Catatan Tidak Ada ");
+          }
+            
+          $$("#order-nama-user").html( data.head.nama_user );
+          $$("#order-telepon").html( data.head.username );
+          // }
         //   alert(data);
           // data2 = data;
         }
