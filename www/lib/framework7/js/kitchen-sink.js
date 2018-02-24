@@ -4945,7 +4945,7 @@ $$(document).on('page:init', '.page[data-page="filter-search"]', function (e) {
 
         var icon = {
             url: icon, // url
-            scaledSize: new google.maps.Size(35, 35), // scaled size
+            scaledSize: new google.maps.Size(45, 35), // scaled size
             origin: new google.maps.Point(0,0), // origin
             labelOrigin: new google.maps.Point(20, 45),
             anchor: new google.maps.Point(0, 0) // anchor
