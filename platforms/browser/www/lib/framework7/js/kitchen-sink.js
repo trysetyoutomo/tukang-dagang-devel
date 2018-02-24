@@ -4012,7 +4012,7 @@ function getListOrder(username, tabActive){
             }
           }
 
-          var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
+          var html =  '<li  style="top: 0px;" class="btn-lihat-pesanan swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
@@ -4025,7 +4025,7 @@ function getListOrder(username, tabActive){
           '</div>'+
           '</a>'+
           '</div>'+
-          '<div class="swipeout-actions-right " '+style+'>'+
+          '<div panggil_id="'+data.id+'" class=" btn-lihat-pesanan swipeout-actions-right " '+style+'>'+
           // '<a ukm-id="'+data.id+'"   class="pending-acc demo-mark bg-green  " style="left: 0px;"><i class="fa fa-check" ></i></a>'+
           // '<a ukm-id="'+data.id+'"   class="pending-reject demo-mark bg-red  " style="left: 0px;"><i class="fa fa-times" ></i></a>'+
           // '<a ukm-id="'+data.id+'" href="tabs-swipeable.html?id='+data.id+'"    class="pending-info demo-mark bg-orange  " style="left: 0px;"><i class="fa fa-info" ></i></a>'+
@@ -4059,15 +4059,19 @@ function getListOrder(username, tabActive){
     });
   }
   function getListOrderDagang(panggil_id){
+    var data2 = []
     $$.ajax({
       url : server+"/index.php?r=UkmPanggil/getListOrderDagang",
       data : "id="+panggil_id,
       success : function(r){
         var data = JSON.parse(r);
-        return data;
+        // $$(".order-jarak").html(data.head.jarak);
+
+        // data2 = data;
         // alert(JSON.stringify(data));
       }
     });
+    // return data2;
    }
 
 
@@ -4088,8 +4092,11 @@ function getListOrder(username, tabActive){
           var pesan;
           if (data.pesan.length>0){
             pesan = data.pesan;
+            $$(".btn-get-calon").show();
           }else{
             pesan = "Tidak ada pesan";
+            $$(".btn-get-calon").hide();
+
           }
 
           var status_sampai;
@@ -4111,7 +4118,7 @@ function getListOrder(username, tabActive){
 
 
 
-          var html =  '<li  style="top: 0px;" class="swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
+          var html =  '<li wkwk  style="top: 0px;" class="  swipeout transitioning tr-calon"  panggil_id="'+data.id+'" >'+
           '<div class="swipeout-content" style="">'+
           '<a href="#" class="item-link item-content">'+
           '<div class="item-inner">'+
@@ -4361,9 +4368,60 @@ function getListOrder(username, tabActive){
       // var id = e.detail.id;
       var page = e.detail.page;
       var id = page.query.id;
+        
+       // var data2 = [];
+      $$.ajax({
+        url : server+"/index.php?r=UkmPanggil/getListOrderDagang",
+        data : "id="+id,
+        success : function(r){
+          var data = JSON.parse(r);
+          // alert(JSON.stringify(data.detail));
+           $$.each(data.detail,function(i,v){
+                if (imageExists(server+"/images/product/"+v.id+".jpg")){
+                img = server+"/images/product/"+v.id+".jpg";
+               }else{
+                img = "img/no_image.jpg";
+               }
+             string = '<li class="hold-hapus-produk-"  data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
+                    '<a href="#" class="item-link item-content">'+
+                    '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                    '<div class="item-inner">'+
+                    '<div class="item-title-row" style="background-image:url()">'+
+                    '<div class="item-title" style="width: 150px;"> '+v.nama+'</div>'+
+                    '<div class="item-after" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</div>'+
+                    '</div>'+
+                     '<div class="item-text" style="width:80px">'+
+                    '<i style="float:none;display:none" class="fa fa-plus-square fa-2x btn-add-qty"></i>&nbsp;'+
+                    '<input readonly item_id="'+v.item_id+'" ukm_id="'+v.ukm_id+'" class="order-qty-final"  type="text" value="'+v.qty+'" style="width:40px;border:1px solid gray;padding:5px;display:inline-block;float:right" />'+
+                    '&nbsp;<i style="display:none" class="fa fa-minus-square fa-2x btn-min-qty" ></i>'
+                     '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</a>'+
+                '</li>'; 
+                $$("#cart-beli-cekout").append(string);
+          });
 
-      var data = getListOrderDagang(id);
-      alert(JSON.stringify(data));
+           // alert(JSON.stringify(data.head));
+          $$(".order-jarak").html(data.head.jarak+" Meter");
+          $$("#total-biaya").html( numberWithCommas(data.head.total) );
+          $$(".alamat-kirim").html( data.head.alamat );
+          if (data.head.pesan!=""){
+            $$("#pesan-order").val( data.head.pesan );
+          }else{
+            $$("#pesan-order").val("Catatan Tidak Ada ");
+          }
+            
+          $$("#order-nama-user").html( data.head.nama_user );
+          $$("#order-telepon").html( data.head.username );
+          // }
+        //   alert(data);
+          // data2 = data;
+        }
+      });
+
+      // var data = getListOrderDagang(id);
+      // alert(JSON.stringify(data));
   });
 
   $$(document).on('page:init', '.page[data-page="favorite-list"]', function (e) {
