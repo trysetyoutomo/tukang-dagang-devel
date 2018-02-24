@@ -2334,7 +2334,8 @@ function reloadSetting(ukm_id){
           var data = JSON.parse(data);
           // console.log(data.delivery);
           // console.log(data.minimal);
-          $("#minimum-value").text(numberWithCommas(deliveryata.minimal) );
+          $("#minimum-value").text(numberWithCommas(data.minimal));
+          $("#minimum-value-umkm").text(data.nama);
           if (data.delivery == 1) {
             $("#check-tracking2-3").prop('checked', true);
           }else{
