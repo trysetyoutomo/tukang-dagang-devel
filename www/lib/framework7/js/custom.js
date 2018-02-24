@@ -1,25 +1,4 @@
 
-// Init App
-var myApp = new Framework7({
-    modalTitle: 'Framework7',
-    // Enable Material theme
-    // cacheIgnore:["http://gis.35utech.com"],
-    // cacheIgnoreGetParameters : true,
-    material: true,
-    cacheDuration: 0,
-    cache: false,
-    tapHold: true, //enable tap hold events
-    onPageInit: function (app, page) {
-
-    }
-});
-
-var $$ = Dom7;
-var server = "http://gis.35utech.com";
-// Add main view
-var mainView = myApp.addView('.view-main', {
-    domCache: true
-});
 $$(document).on('submit', '#form-reset-password', function (e) {
     var password   = $$("#password").val(); 
     var repassword = $$("#repassword").val();
@@ -84,10 +63,10 @@ $$(document).on('click', '.open-minimum', function (e) {
     function (value) {
       if (value == '') {
         customAlert('Minimum Pemesanan harap diisi', 'Peringatan');
-        console.log("kosong");
+        // console.log("kosong");
       } else {
-        console.log("terisi");
-        console.log(value);
+        // console.log("terisi");
+        // console.log(value);
         if (validateNumber(value)) {
             console.log("angka");
             $$.ajax({
@@ -98,7 +77,9 @@ $$(document).on('click', '.open-minimum', function (e) {
                     for_what:"minimal", 
                 },
                 success:function(data){
-                    console.log(data);
+                    // console.log(data);
+                    // reload
+                    reloadSetting(ukm_id);
                  },
                 error:function(err){
                     console.log(err);
@@ -115,3 +96,5 @@ $$(document).on('click', '.open-minimum', function (e) {
     }
   );
 });
+
+blink('.realtime-circle-on');
