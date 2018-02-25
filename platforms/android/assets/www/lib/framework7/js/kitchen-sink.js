@@ -2179,7 +2179,7 @@ function GetProdukByUMKM(id){
 
                string = '<li class="hold-hapus-produk-" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
-                '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                '<div class="item-media"><div style="background-image:url('+img+');width: 115px;height: 80px;background-size: cover;background-repeat: no-repeat;background-position: 50% 50%;"></div></div>'+
                 '<div class="item-inner">'+
                     '<div class="item-title-row" style="background-image:url()">'+
                           '<div class="item-title" style="width: 150px; margin-top: 20px"> <span class="nama-item">'+v.nama+' </span><br> <span class="harga-item" angka="'+v.harga+'"> Rp.'+numberWithCommas(v.harga)+'</span></div>'+
@@ -2703,7 +2703,7 @@ function cariById(id){
                console
                string = '<li class="hold-hapus-produk" data-tersedia="'+v.tersedia+'" p_id="'+v.id+'" data-keterangan="'+v.keterangan+'" data-harga="'+v.harga+'" data-id="'+v.id+'"  data-nama="'+v.nama+'" ukm_id="'+v.ukm_id+'" >'+
                 '<a href="#" class="item-link item-content">'+
-                '<div class="item-media"><img src="'+img+'" width="80"></div>'+
+                '<div class="item-media"><div style="background-image:url('+img+');width: 115px;height: 80px;background-size: cover;background-repeat: no-repeat;background-position: 50% 50%;"></div></div>'+
                 '<div class="item-inner">'+
                 '<div class="item-title-row" style="background-image:url()">'+
                 '<div class="item-title"> '+v.nama+'</div>'+
@@ -4110,7 +4110,7 @@ function getListOrder(username, tabActive){
           // media-list
           '</div>'+
           '</li>';
-          $$('.media-list ul'+idString).append(html);
+          $$(idString).append(html);
         
         });
      
